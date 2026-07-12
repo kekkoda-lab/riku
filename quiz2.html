@@ -974,6 +974,9 @@ function buildQuiz(){
   els.resultCard.classList.add('hidden');
   els.quizCard.classList.remove('hidden');
   renderQuestion();
+  
+  // 最初のページに戻るボタンを常に表示（初期化時に無ければ作成）
+  insertReturnLink();
 }
 
 function renderQuestion(){
@@ -1063,6 +1066,37 @@ function showResult(){
   else if(rate >= 0.5) msg = 'よくがんばりました！';
   else msg = 'もう一度挑戦して、力をつけよう！';
   els.finalMsg.textContent = msg;
+}
+
+// 追加：最初のページ（1章）に戻るボタンリンクをノートカード内の一番下に自動挿入する関数
+function insertReturnLink(){
+  if(document.getElementById('custom-back-btn')) return;
+  
+  const link = document.createElement('a');
+  link.id = 'custom-back-btn';
+  link.href = 'index.html';
+  link.textContent = '⬅ 最初のページ（1章）に戻る';
+  
+  // ボタンのデザイン（ノートの雰囲気に合わせたスタイル）
+  link.style.display = 'block';
+  link.style.margin = '24px auto 10px';
+  link.style.padding = '14px';
+  link.style.width = '90%';
+  link.style.maxWidth = '400px';
+  link.style.textAlign = 'center';
+  link.style.background = '#F3EFE2';
+  link.style.border = '1px solid #D9D2BE';
+  link.style.borderRadius = '12px';
+  link.style.color = '#24344D';
+  link.style.textDecoration = 'none';
+  link.style.fontSize = '16px';
+  link.style.fontWeight = 'bold';
+  link.style.boxShadow = '0 2px 4px rgba(0,0,0,0.05)';
+  
+  // 「次の問題へ」ボタンがある親要素の末尾（カード内の一番下）に追加
+  if(els.nextBtn && els.nextBtn.parentNode){
+    els.nextBtn.parentNode.appendChild(link);
+  }
 }
 
 els.speakBtn.addEventListener('click', speakWord);
