@@ -105,6 +105,25 @@
     color: var(--ink-soft);
     margin: 4px 0 10px;
   }
+  
+  /* 追加したジャンプボタンのスタイル */
+  .next-page-link {
+    display: inline-block;
+    margin: 5px 0 20px 0;
+    padding: 10px 18px;
+    background-color: var(--paper-2);
+    border: 1px dashed var(--gold);
+    border-radius: 8px;
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 16px;
+    transition: background-color 0.2s;
+  }
+  .next-page-link:hover {
+    background-color: var(--gold-soft);
+  }
+
   .pool-note{
     font-family:'Space Grotesk', sans-serif;
     font-size:14px;
@@ -275,7 +294,7 @@ const QUESTIONS = [
   {cat:'vocab', text:'Could you keep ( ) while the baby is sleeping?', options:['quiet','quietly','quietness','quieted'], answer:0, exp:'keep + 形容詞で「〜のままでいる」という意味です。'},
   {cat:'vocab', text:'The shop was closed, so we had to look ( ) another one.', options:['for','at','after','into'], answer:0, exp:'look for 〜で「〜を探す」という意味です。'},
   {cat:'vocab', text:'He was born ( ) a small village in the mountains.', options:['in','at','on','by'], answer:0, exp:'村や町など広い場所には in を使います。'},
-  {cat:'vocab', text:"I'm not used ( ) getting up so early.", options:['to','for','with','at'], answer:0, exp:'be used to 〜ing で「〜することに慣れている」という意味です。'},
+  {cat:'vocab', text:"I'm not used ( ) getting up so early.", options:['to','for','with','at'], align:'left', answer:0, exp:'be used to 〜ing で「〜することに慣れている」という意味です。'},
   {cat:'vocab', text:'She takes ( ) of her little brother every afternoon.', options:['care','caring','cared','cares'], answer:0, exp:'take care of 〜で「〜の世話をする」という意味です。'},
   {cat:'vocab', text:"Don't forget ( ) your umbrella; it looks like rain.", options:['to bring','bring','bringing','brought'], answer:0, exp:'forget to〜で「（これから）〜するのを忘れる」という意味です。'},
   {cat:'vocab', text:'The bus was full, so we had to wait ( ) the next one.', options:['for','at','on','in'], answer:0, exp:'wait for 〜で「〜を待つ」という意味です。'},
@@ -317,7 +336,7 @@ const QUESTIONS = [
   {cat:'grammar', text:'The number of students ( ) increasing every year.', options:['is','are','was','were'], answer:0, exp:'the number of 〜（〜の数）は単数扱いなので is が正解です。'},
   {cat:'grammar', text:'Not until she arrived home ( ) she remember her key.', options:['did','had','was','would'], answer:0, exp:'Not until 〜が文頭に出ると倒置が起こり、did she remember の語順になります。'},
 
-  // ---- conversation (12) ----
+  // ---- conversation (12) ----  
   {cat:'conv', text:'A: Excuse me, could you tell me how to get to the station?\nB: ( )', options:['Go straight and turn left at the corner.','I\'m fine, thank you.','It\'s five dollars.','See you later.'], answer:0, exp:'道を尋ねられているので、道順を答える応答が自然です。'},
   {cat:'conv', text:'A: Would you like some more coffee?\nB: ( )', options:["No, thank you. I've had enough.",'Yes, I am.',"I don't know how to make it.","It's over there."], answer:0, exp:'Would you like 〜? に対しては丁寧に断る／受ける返答が自然です。'},
   {cat:'conv', text:'A: What time does the next bus leave?\nB: ( )', options:['It leaves at 3:30.',"It's blue.",'I bought it yesterday.','About two kilometers.'], answer:0, exp:'時刻を尋ねられているので時刻で答えます。'},
@@ -325,7 +344,7 @@ const QUESTIONS = [
   {cat:'conv', text:'A: Can I try this jacket on?\nB: ( )', options:['Sure, the fitting room is over there.',"I don't like it.","It's Monday today.","That's too bad."], answer:0, exp:'試着したいという依頼に対する自然な案内の応答です。'},
   {cat:'conv', text:'A: How was your trip to Okinawa?\nB: ( )', options:['It was amazing! I want to go again.','I have no idea.',"It's next to the station.","I'm sorry to hear that."], answer:0, exp:'旅行の感想を聞かれているので感想で答えます。'},
   {cat:'conv', text:'A: Do you mind if I open the window?\nB: ( )', options:['Not at all, go ahead.','Yes, I do it every day.',"It's five o'clock.",'I like windows.'], answer:0, exp:'Do you mind if 〜? に「かまいません」と答えるときは Not at all. を使います。'},
-  {cat:'conv', text:"A: Let's meet at the library at 4.\nB: ( )", options:['Sounds good. See you then.',"I'm not a library.",'It costs 400 yen.','I already ate.'], answer:0, exp:'待ち合わせの提案に対する自然な同意の応答です。'},
+  {cat:'conv', text:"A: Let's meet at the library at 4.\nB: ( )", options:['Sounds good. See you then.',"I'm not a library.",'It costs 400 yen.','I already ate.'], answer:0, exp:'待ち合わせの提案に対する自然な同意 of の応答です。'},
   {cat:'conv', text:'A: How much is this T-shirt?\nB: ( )', options:["It's fifteen dollars.","It's blue and white.",'I bought it last week.','It fits me well.'], answer:0, exp:'値段を尋ねられているので値段で答えます。'},
   {cat:'conv', text:'A: Did you enjoy the concert last night?\nB: ( )', options:['Yes, it was fantastic!','It starts at seven.','I have two tickets.','He plays the guitar.'], answer:0, exp:'感想を聞かれているので感想を答えます。'},
   {cat:'conv', text:'A: Excuse me, is this seat taken?\nB: ( )', options:['No, please go ahead.',"I'm from Osaka.",'It costs two dollars.','I like this seat.'], answer:0, exp:'席が空いているかを尋ねられ、「どうぞ」と答える自然な流れです。'},
@@ -381,8 +400,6 @@ let state = {
   locked: false,
 };
 
-// remembers which questions have already been shown, per category,
-// so that each new round of 10 pulls a fresh set until the pool is exhausted.
 const pools = {};
 
 function shuffle(arr){
@@ -394,7 +411,6 @@ function shuffle(arr){
   return a;
 }
 
-// returns a copy of the question with its options (and answer index) freshly shuffled
 function shuffleOptions(q){
   const order = shuffle(q.options.map((_,i)=>i));
   const newOptions = order.map(i=>q.options[i]);
@@ -483,6 +499,10 @@ function renderStart(){
       </div>
     </header>
     <p class="start-lead">中学卒業〜高校初級レベルの単語・文法・会話表現・読解をノート形式で練習できます。カテゴリーを選んでスタートしましょう。答えると赤ペンでその場で採点されます。</p>
+    
+    <!-- 追加：別のクイズページへジャンプするボタンリンク -->
+    <a href="quiz2.html" class="next-page-link">👉 2章（新しい問題）に挑戦する場合はこちら</a>
+    
     <p class="pool-note">※ 1回につき最大${BATCH_SIZE}問。同じカテゴリーをもう一度選ぶと、プールが尽きるまで別の問題セットが出題されます。</p>
     <div class="cat-grid">${cards}</div>
   `;
@@ -529,7 +549,6 @@ function renderQuiz(){
         <span class="eyebrow">${CATS[state.category].tag}</span>
         <h1>${CATS[state.category].label}</h1>
       </div>
-      <span class="score-chip">正解 <b>${correctSoFar}</b> / ${answered}</span>
     </header>
 
     <div class="progress-row">
@@ -632,7 +651,7 @@ function renderResult(){
       ${stampSVG(pctScore>=70)}
       <div class="result-score">${correct}<span> / ${total} 問正解</span></div>
       <h2>${rating}</h2>
-      <p class="sub">正答率 ${pctScore}%　・　${nextNote}</p>
+      <p class="sub">正答率 ${pctScore}% ・ ${nextNote}</p>
     </div>
 
     <div class="breakdown">${bdRows}</div>
