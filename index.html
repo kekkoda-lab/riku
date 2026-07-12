@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>英検3級 practice ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Zen+Maru+Gothic:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #FAF7EF;
+    --paper-2: #F3EFE2;
+    --ink: #24344D;
+    --ink-soft: #566178;
+    --rule: #C3D7E8;
+    --margin-red: #C8433C;
+    --red: #D6473A;
+    --red-deep: #B93A2E;
+    --gold: #C9A227;
+    --gold-soft: #EADFAF;
+    --gray: #9AA2AF;
+    --green-ok: #4C7A5D;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--paper);
+    font-family:'Zen Maru Gothic', sans-serif;
+    color: var(--ink);
+    min-height:100vh;
+  }
+  body{ font-size: 18px; }
+  .app{
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 32px 24px 70px;
+    position:relative;
+  }
+
+  .page{
+    position:relative;
+    background-image:
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 44px,
+        var(--rule) 44px,
+        var(--rule) 46px
+      );
+    background-position: 0 110px;
+    border-radius: 16px;
+    padding: 40px 36px 40px 52px;
+    box-shadow: 0 1px 0 rgba(36,52,77,0.05), 0 18px 40px -24px rgba(36,52,77,0.25);
+    border: 1px solid #E7E0CE;
+  }
+  .page::before{
+    content:"";
+    position:absolute;
+    left: 30px;
+    top:0;
+    bottom:0;
+    width:3px;
+    background: var(--margin-red);
+    opacity:0.55;
+  }
+
+  header.top{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    margin-bottom:16px;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .brand{ display:flex; flex-direction:column; gap:2px; }
+  .brand .eyebrow{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:14px;
+    letter-spacing:0.14em;
+    color: var(--ink-soft);
+    text-transform:uppercase;
+  }
+  .brand h1{
+    font-family:'Klee One', cursive;
+    font-weight:600;
+    font-size: 34px;
+    margin:0;
+    color: var(--ink);
+  }
+  .score-chip{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:16px;
+    color: var(--ink-soft);
+    background: var(--paper-2);
+    border:1px solid #E7E0CE;
+    border-radius: 999px;
+    padding:8px 18px;
+    white-space:nowrap;
+  }
+  .score-chip b{ color: var(--ink); font-weight:700; }
+
+  .start-lead{
+    font-size:18px;
+    line-height:1.9;
+    color: var(--ink-soft);
+    margin: 4px 0 10px;
+  }
+  .pool-note{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:14px;
+    color: var(--gold);
+    margin: 0 0 26px;
+  }
+  .cat-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:16px;
+    margin-bottom: 22px;
+  }
+  @media (max-width:600px){ .cat-grid{ grid-template-columns: 1fr; } }
+
+  .cat-card{
+    text-align:left;
+    background: #fff;
+    border: 2px solid #E7E0CE;
+    border-radius: 14px;
+    padding: 20px 20px 18px;
+    cursor:pointer;
+    font-family:'Zen Maru Gothic', sans-serif;
+    transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+    position:relative;
+    overflow:hidden;
+  }
+  .cat-card:hover{
+    transform: translateY(-2px);
+    border-color: var(--gold);
+    box-shadow: 0 10px 22px -14px rgba(36,52,77,0.35);
+  }
+  .cat-card .tag{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:13px;
+    letter-spacing:.08em;
+    color: var(--gold);
+    text-transform:uppercase;
+    font-weight:700;
+  }
+  .cat-card h3{ margin: 8px 0 6px; font-size: 22px; font-weight:700; color: var(--ink); }
+  .cat-card p{ margin:0; font-size:15px; color: var(--ink-soft); line-height:1.6; }
+  .cat-card .count{
+    position:absolute; top:16px; right:18px;
+    font-family:'Space Grotesk', sans-serif; font-size:13px; color: var(--gray);
+  }
+
+  .primary-btn{
+    font-family:'Zen Maru Gothic', sans-serif;
+    font-weight:700; font-size:18px; color:#fff;
+    background: var(--ink); border:none; border-radius: 12px;
+    padding: 16px 26px; cursor:pointer;
+    display:inline-flex; align-items:center; gap:8px;
+    transition: transform .12s ease, background .15s ease;
+  }
+  .primary-btn:hover{ background:#1a2740; transform: translateY(-1px); }
+  .primary-btn.gold{ background: var(--red-deep); }
+  .primary-btn.gold:hover{ background: var(--red); }
+  .primary-btn:disabled{ opacity:.4; cursor:not-allowed; transform:none; }
+
+  .ghost-btn{
+    font-family:'Zen Maru Gothic', sans-serif;
+    font-weight:600; font-size:16px; color: var(--ink-soft);
+    background:transparent; border:2px solid #D9D2BE; border-radius:12px;
+    padding: 12px 18px; cursor:pointer;
+  }
+  .ghost-btn:hover{ border-color: var(--ink-soft); color: var(--ink); }
+
+  .progress-row{ display:flex; align-items:center; gap:12px; margin-bottom: 26px; }
+  .progress-track{ flex:1; height:10px; background:#E7E0CE; border-radius:999px; overflow:hidden; }
+  .progress-fill{ height:100%; background: linear-gradient(90deg, var(--gold), var(--red)); border-radius:999px; transition: width .35s ease; }
+  .progress-label{ font-family:'Space Grotesk', sans-serif; font-size:16px; color: var(--ink-soft); white-space:nowrap; }
+
+  .q-eyebrow{
+    font-family:'Space Grotesk', sans-serif; font-size:14px; letter-spacing:.1em;
+    text-transform:uppercase; color: var(--gold); font-weight:700; margin-bottom:10px;
+  }
+  .q-text{ font-size:26px; line-height:1.7; color: var(--ink); margin: 0 0 10px; }
+  .q-jp{ font-size:16px; color: var(--ink-soft); margin: 0 0 26px; }
+  .q-passage{
+    background: var(--paper-2); border-left: 4px solid var(--rule);
+    padding: 18px 20px; border-radius: 8px;
+    font-size:18px; line-height:1.85; color: var(--ink); margin-bottom: 22px;
+  }
+
+  .options{ display:flex; flex-direction:column; gap:12px; margin-bottom: 10px; }
+  .opt{
+    display:flex; align-items:center; gap:14px; text-align:left;
+    background:#fff; border:2px solid #E7E0CE; border-radius:12px;
+    padding: 17px 20px; font-family:'Zen Maru Gothic', sans-serif; font-size:19px;
+    color: var(--ink); cursor:pointer;
+    transition: border-color .12s ease, background .12s ease;
+  }
+  .opt:hover:not(.locked){ border-color: var(--ink-soft); background: #FDFCF8; }
+  .opt .letter{
+    font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:15px;
+    color: var(--ink-soft); border:2px solid #D9D2BE; border-radius:50%;
+    width:30px; height:30px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .opt.locked{ cursor:default; }
+  .opt.correct{ border-color: var(--green-ok); background: #F1F7F3; }
+  .opt.correct .letter{ background: var(--green-ok); color:#fff; border-color: var(--green-ok); }
+  .opt.wrong{ border-color: var(--red); background: #FBF0EE; }
+  .opt.wrong .letter{ background: var(--red); color:#fff; border-color: var(--red); }
+
+  .feedback-row{ min-height: 100px; display:flex; align-items:center; gap:16px; margin: 18px 0 8px; }
+  .feedback-text{ font-size:17px; color: var(--ink-soft); line-height:1.7; }
+  .feedback-text b{ color: var(--ink); font-size:19px; }
+
+  .quiz-nav{ display:flex; justify-content:space-between; align-items:center; margin-top: 26px; }
+
+  .result-hero{ text-align:center; padding: 12px 0 8px; }
+  .result-hero h2{ font-family:'Klee One', cursive; font-size: 36px; margin: 8px 0 4px; }
+  .result-hero .sub{ color: var(--ink-soft); font-size:17px; margin-bottom: 4px; }
+  .result-score{ font-family:'Space Grotesk', sans-serif; font-weight:700; font-size: 58px; color: var(--ink); margin: 12px 0 0; }
+  .result-score span{ font-size:25px; color: var(--ink-soft); font-weight:500; }
+
+  .breakdown{ margin-top: 32px; display:flex; flex-direction:column; gap:14px; }
+  .bd-row{ display:flex; align-items:center; gap:14px; font-size:17px; }
+  .bd-label{ width:150px; color: var(--ink-soft); flex-shrink:0; }
+  .bd-track{ flex:1; height:12px; background:#E7E0CE; border-radius:999px; overflow:hidden; }
+  .bd-fill{ height:100%; background: var(--ink); border-radius:999px; }
+  .bd-num{ font-family:'Space Grotesk', sans-serif; color: var(--ink-soft); width:54px; text-align:right; flex-shrink:0; }
+
+  .result-actions{ display:flex; gap:12px; justify-content:center; margin-top: 34px; flex-wrap:wrap; }
+
+  .review-list{ margin-top: 34px; display:flex; flex-direction:column; gap:12px; }
+  .review-item{
+    display:flex; gap:12px; align-items:flex-start; padding: 14px 16px;
+    border-radius:10px; background: var(--paper-2); font-size:16px; line-height:1.65;
+  }
+  .review-item .mark{ font-size:19px; flex-shrink:0; }
+  .review-item.miss{ background:#FBF0EE; }
+
+  footer.note{ text-align:center; color: var(--gray); font-size:14px; margin-top: 22px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="page" id="page"></div>
+  <footer class="note">全問オリジナル問題・英検3級レベル想定 / 採点結果はブラウザ内のみで保持されます</footer>
+</div>
+
+<script>
+/* ---------------- Question bank ---------------- */
+const QUESTIONS = [
+  // ---- vocabulary (20) ----
+  {cat:'vocab', text:'My brother is very ( ) in science. He wants to be a scientist.', options:['interested','interesting','interest','interests'], answer:0, exp:'be interested in 〜で「〜に興味がある」という意味です。'},
+  {cat:'vocab', text:'Could you ( ) me the salt, please?', options:['pass','passed','passing','to pass'], answer:0, exp:'依頼の文なので動詞の原形が入ります。pass 〜 で「〜を渡す」。'},
+  {cat:'vocab', text:'She was so tired that she fell ( ) during the movie.', options:['asleep','sleep','sleepy','slept'], answer:0, exp:'fall asleep で「眠り込む」という決まった表現です。'},
+  {cat:'vocab', text:'The museum is famous ( ) its old paintings.', options:['for','at','in','on'], answer:0, exp:'be famous for 〜で「〜で有名だ」という意味です。'},
+  {cat:'vocab', text:'He has been absent ( ) school for three days.', options:['from','in','on','to'], answer:0, exp:'be absent from 〜で「〜を欠席している」という意味です。'},
+  {cat:'vocab', text:'We need to ( ) up early to catch the first train.', options:['get','go','take','make'], answer:0, exp:'get up で「起きる」という熟語です。'},
+  {cat:'vocab', text:'Please turn ( ) the TV before you leave the room.', options:['off','up','into','on the'], answer:0, exp:'turn off 〜で「（電源など）を消す」という意味です。'},
+  {cat:'vocab', text:'This book is ( ) than that one.', options:['more difficult','difficult','most difficult','difficultest'], answer:0, exp:'比較の文なので比較級 more difficult が正解です。'},
+  {cat:'vocab', text:"I'm looking forward ( ) seeing you this weekend.", options:['to','for','at','with'], answer:0, exp:'look forward to 〜ing で「〜するのを楽しみにする」という意味です。'},
+  {cat:'vocab', text:'The concert was ( ) that everyone wanted an encore.', options:['so exciting','such exciting','so excited','such excited'], answer:0, exp:'so + 形容詞 + that 〜 で「とても…なので〜」という意味です。'},
+  {cat:'vocab', text:'I ( ) my keys somewhere in the house. Can you help me find them?', options:['lost','lose','losing','loses'], answer:0, exp:'過去の出来事なので過去形 lost が正解です。'},
+  {cat:'vocab', text:'The weather in this town changes ( ) very quickly.', options:['suddenly','sudden','suddenness','sudden to'], answer:0, exp:'動詞 changes を修飾するので副詞 suddenly が入ります。'},
+  {cat:'vocab', text:'Please remember ( ) the door when you leave.', options:['to lock','lock','locking','locked'], answer:0, exp:'remember to〜で「（これから）〜するのを忘れない」という意味です。'},
+  {cat:'vocab', text:'My father is good ( ) fixing old cars.', options:['at','in','for','with'], answer:0, exp:'be good at 〜で「〜が得意だ」という意味です。'},
+  {cat:'vocab', text:'The train was delayed ( ) heavy snow.', options:['because of','because','so','although'], answer:0, exp:'後ろに名詞句が続くので because of を使います。'},
+  {cat:'vocab', text:'She decided to give ( ) smoking for her health.', options:['up','in','out','away'], answer:0, exp:'give up 〜で「〜をやめる」という意味です。'},
+  {cat:'vocab', text:'We should bring an umbrella ( ) case it rains.', options:['in','on','at','for'], answer:0, exp:'in case 〜で「〜する場合に備えて」という意味です。'},
+  {cat:'vocab', text:'The players practiced hard ( ) order to win the championship.', options:['in','on','at','for'], answer:0, exp:'in order to〜で「〜するために」という意味です。'},
+  {cat:'vocab', text:'He apologized ( ) being late for the meeting.', options:['for','to','of','about'], answer:0, exp:'apologize for 〜で「〜のことで謝る」という意味です。'},
+  {cat:'vocab', text:"I can't believe how fast time ( ) by.", options:['flies','fly','flying','flew'], answer:0, exp:'time flies で「時が経つのは早い」という決まり文句です。'},
+  {cat:'vocab', text:'My grandmother ( ) me how to bake bread when I was young.', options:['taught','teach','teaching','taughts'], answer:0, exp:'過去の出来事なので過去形 taught が正解です。'},
+  {cat:'vocab', text:'Could you keep ( ) while the baby is sleeping?', options:['quiet','quietly','quietness','quieted'], answer:0, exp:'keep + 形容詞で「〜のままでいる」という意味です。'},
+  {cat:'vocab', text:'The shop was closed, so we had to look ( ) another one.', options:['for','at','after','into'], answer:0, exp:'look for 〜で「〜を探す」という意味です。'},
+  {cat:'vocab', text:'He was born ( ) a small village in the mountains.', options:['in','at','on','by'], answer:0, exp:'村や町など広い場所には in を使います。'},
+  {cat:'vocab', text:"I'm not used ( ) getting up so early.", options:['to','for','with','at'], answer:0, exp:'be used to 〜ing で「〜することに慣れている」という意味です。'},
+  {cat:'vocab', text:'She takes ( ) of her little brother every afternoon.', options:['care','caring','cared','cares'], answer:0, exp:'take care of 〜で「〜の世話をする」という意味です。'},
+  {cat:'vocab', text:"Don't forget ( ) your umbrella; it looks like rain.", options:['to bring','bring','bringing','brought'], answer:0, exp:'forget to〜で「（これから）〜するのを忘れる」という意味です。'},
+  {cat:'vocab', text:'The bus was full, so we had to wait ( ) the next one.', options:['for','at','on','in'], answer:0, exp:'wait for 〜で「〜を待つ」という意味です。'},
+  {cat:'vocab', text:'My score improved a lot ( ) I studied every day.', options:['because','because of','so','but'], answer:0, exp:'後ろに文（主語+動詞）が続くので because を使います。'},
+  {cat:'vocab', text:'He was praised ( ) his hard work.', options:['for','to','at','with'], answer:0, exp:'be praised for 〜で「〜のことでほめられる」という意味です。'},
+  {cat:'vocab', text:'The children were excited ( ) hear the news.', options:['to','for','at','with'], answer:0, exp:'感情の原因を表す to不定詞の用法です。'},
+  {cat:'vocab', text:'I have known her ( ) we were in elementary school.', options:['since','for','from','at'], answer:0, exp:'後ろに文が続き起点を表すので since を使います。'},
+  {cat:'vocab', text:'Please hand ( ) your homework by Friday.', options:['in','on','at','out'], answer:0, exp:'hand in 〜で「〜を提出する」という意味です。'},
+  {cat:'vocab', text:"She's afraid ( ) spiders.", options:['of','at','for','with'], answer:0, exp:'be afraid of 〜で「〜を怖がる」という意味です。'},
+
+  // ---- grammar (16) ----
+  {cat:'grammar', text:'If it ( ) rain tomorrow, we will cancel the picnic.', options:['rains','rain','rained','will rain'], answer:0, exp:'if の条件節では未来のことでも現在形を使います。'},
+  {cat:'grammar', text:'My mother told me ( ) my room before dinner.', options:['to clean','clean','cleaning','cleaned'], answer:0, exp:'tell 人 to〜 で「人に〜するように言う」という形です。'},
+  {cat:'grammar', text:'This is the book ( ) I bought yesterday.', options:['which','who','whom','whose'], answer:0, exp:'先行詞が the book（物）なので関係代名詞 which が入ります。'},
+  {cat:'grammar', text:'By the time we arrived, the movie ( ) already started.', options:['had','has','have','was'], answer:0, exp:'過去のある時点より前に起きたことなので過去完了 had started を使います。'},
+  {cat:'grammar', text:'You ( ) finish your homework before you play video games.', options:['must','may','could','would'], answer:0, exp:'「〜しなければならない」という義務を表すのは must です。'},
+  {cat:'grammar', text:'The letter ( ) by my sister last night.', options:['was written','wrote','is writing','writes'], answer:0, exp:'手紙は「書かれる」ものなので受け身 was written が正解です。'},
+  {cat:'grammar', text:'( ) you finish your homework, you can watch TV.', options:['After','Until','Because','Although'], answer:0, exp:'「宿題を終えた後で」という意味の流れなので After が適切です。'},
+  {cat:'grammar', text:'She is the girl ( ) won the speech contest.', options:['who','which','whom','whose'], answer:0, exp:'先行詞が the girl（人）で主語の働きをするので who が正解です。'},
+  {cat:'grammar', text:'I wish I ( ) more time to study for the test.', options:['had','have','has','will have'], answer:0, exp:'wish の後に現実と異なる願望を続けるときは過去形を使います。'},
+  {cat:'grammar', text:'The movie was ( ) boring that I fell asleep.', options:['so','such','very','too'], answer:0, exp:'so + 形容詞 + that 〜 の形です。'},
+  {cat:'grammar', text:'Neither Tom ( ) his brother likes vegetables.', options:['nor','or','and','but'], answer:0, exp:'neither A nor B で「AもBも〜ない」という意味です。'},
+  {cat:'grammar', text:'This is the biggest cake ( ) I have ever seen.', options:['that','who','whom','whose'], answer:0, exp:'最上級を修飾する関係代名詞節では that がよく使われます。'},
+  {cat:'grammar', text:'The homework must ( ) finished by tomorrow.', options:['be','is','was','being'], answer:0, exp:'must の後は動詞の原形。受け身なので must be finished となります。'},
+  {cat:'grammar', text:'If I ( ) you, I would apologize first.', options:['were','was','am','be'], answer:0, exp:'仮定法過去では be動詞は主語に関わらず were を使います。'},
+  {cat:'grammar', text:'He asked me ( ) I could help him with his bag.', options:['if','that','what','when'], answer:0, exp:'「〜かどうか」を表す間接疑問文なので if が入ります。'},
+  {cat:'grammar', text:'The bridge ( ) connects the two towns was built in 1990.', options:['that','who','whom','whose'], answer:0, exp:'先行詞が the bridge（物）で主語の働きなので that（またはwhich）が正解です。'},
+  {cat:'grammar', text:'My sister is taller than ( ) in her class.', options:['anyone else','someone','no one','everyone'], answer:0, exp:'比較の文でクラスの他の誰よりも背が高いというときは anyone else を使います。'},
+  {cat:'grammar', text:'The homework, ( ) was very difficult, took me three hours.', options:['which','who','whom','whose'], answer:0, exp:'先行詞が the homework（物）で、コンマの後に続く非制限用法なので which が正解です。'},
+  {cat:'grammar', text:'Not only Tom ( ) also his friends enjoyed the trip.', options:['but','and','or','nor'], answer:0, exp:'not only A but also B で「AだけでなくBも」という意味です。'},
+  {cat:'grammar', text:'I have lived in this city ( ) I was born.', options:['since','for','from','until'], answer:0, exp:'「生まれてからずっと」という起点を表すので since が正解です。'},
+  {cat:'grammar', text:'This is one of the ( ) interesting books I have ever read.', options:['most','more','very','much'], answer:0, exp:'one of the most 〜 で「最も〜なものの一つ」という意味です。'},
+  {cat:'grammar', text:'The more you practice, ( ) you will become.', options:['the better','better','the best','best'], answer:0, exp:'the + 比較級, the + 比較級 で「〜すればするほど…」という構文です。'},
+  {cat:'grammar', text:'She would have passed the exam if she ( ) harder.', options:['had studied','studied','studies','study'], answer:0, exp:'仮定法過去完了なので if節には had studied を使います。'},
+  {cat:'grammar', text:'The problem is too difficult ( ) me to solve.', options:['for','of','to','with'], answer:0, exp:'too 〜 for 人 to… で「人が…するには〜すぎる」という意味です。'},
+  {cat:'grammar', text:'Whoever comes first ( ) choose the best seat.', options:['can','must','should','will'], answer:0, exp:'複合関係代名詞 whoever が主語のとき、単数として扱われます。'},
+  {cat:'grammar', text:'He spoke so quietly ( ) I could hardly hear him.', options:['that','which','what','so'], answer:0, exp:'so + 副詞 + that 〜 の構文です。'},
+  {cat:'grammar', text:'I have nothing ( ) to do this weekend.', options:['special','specially','specialize','specialty'], answer:0, exp:'nothing の後ろに形容詞を続けて「特別なことは何もない」という意味になります。'},
+  {cat:'grammar', text:'The number of students ( ) increasing every year.', options:['is','are','was','were'], answer:0, exp:'the number of 〜（〜の数）は単数扱いなので is が正解です。'},
+  {cat:'grammar', text:'Not until she arrived home ( ) she remember her key.', options:['did','had','was','would'], answer:0, exp:'Not until 〜が文頭に出ると倒置が起こり、did she remember の語順になります。'},
+
+  // ---- conversation (12) ----
+  {cat:'conv', text:'A: Excuse me, could you tell me how to get to the station?\nB: ( )', options:['Go straight and turn left at the corner.','I\'m fine, thank you.','It\'s five dollars.','See you later.'], answer:0, exp:'道を尋ねられているので、道順を答える応答が自然です。'},
+  {cat:'conv', text:'A: Would you like some more coffee?\nB: ( )', options:["No, thank you. I've had enough.",'Yes, I am.',"I don't know how to make it.","It's over there."], answer:0, exp:'Would you like 〜? に対しては丁寧に断る／受ける返答が自然です。'},
+  {cat:'conv', text:'A: What time does the next bus leave?\nB: ( )', options:['It leaves at 3:30.',"It's blue.",'I bought it yesterday.','About two kilometers.'], answer:0, exp:'時刻を尋ねられているので時刻で答えます。'},
+  {cat:'conv', text:"A: I'm sorry, I broke your pen.\nB: ( )", options:["That's okay. Don't worry about it.","You're welcome.",'Nice to meet you.','I have no idea.'], answer:0, exp:'謝罪に対しては許す・気にしないという応答が自然です。'},
+  {cat:'conv', text:'A: Can I try this jacket on?\nB: ( )', options:['Sure, the fitting room is over there.',"I don't like it.","It's Monday today.","That's too bad."], answer:0, exp:'試着したいという依頼に対する自然な案内の応答です。'},
+  {cat:'conv', text:'A: How was your trip to Okinawa?\nB: ( )', options:['It was amazing! I want to go again.','I have no idea.',"It's next to the station.","I'm sorry to hear that."], answer:0, exp:'旅行の感想を聞かれているので感想で答えます。'},
+  {cat:'conv', text:'A: Do you mind if I open the window?\nB: ( )', options:['Not at all, go ahead.','Yes, I do it every day.',"It's five o'clock.",'I like windows.'], answer:0, exp:'Do you mind if 〜? に「かまいません」と答えるときは Not at all. を使います。'},
+  {cat:'conv', text:"A: Let's meet at the library at 4.\nB: ( )", options:['Sounds good. See you then.',"I'm not a library.",'It costs 400 yen.','I already ate.'], answer:0, exp:'待ち合わせの提案に対する自然な同意の応答です。'},
+  {cat:'conv', text:'A: How much is this T-shirt?\nB: ( )', options:["It's fifteen dollars.","It's blue and white.",'I bought it last week.','It fits me well.'], answer:0, exp:'値段を尋ねられているので値段で答えます。'},
+  {cat:'conv', text:'A: Did you enjoy the concert last night?\nB: ( )', options:['Yes, it was fantastic!','It starts at seven.','I have two tickets.','He plays the guitar.'], answer:0, exp:'感想を聞かれているので感想を答えます。'},
+  {cat:'conv', text:'A: Excuse me, is this seat taken?\nB: ( )', options:['No, please go ahead.',"I'm from Osaka.",'It costs two dollars.','I like this seat.'], answer:0, exp:'席が空いているかを尋ねられ、「どうぞ」と答える自然な流れです。'},
+  {cat:'conv', text:'A: Could you help me carry these boxes?\nB: ( )', options:['Sure, no problem.',"I'm not a box.",'It weighs five kilos.','They are over there.'], answer:0, exp:'依頼に対して快く引き受ける応答が自然です。'},
+  {cat:'conv', text:'A: I heard you got a new job. Congratulations!\nB: ( )', options:["Thank you! I'm really excited about it.","I don't have a job.","It's raining outside.","I'm sorry about that."], answer:0, exp:'お祝いの言葉に対してお礼を述べる応答が自然です。'},
+  {cat:'conv', text:'A: Excuse me, does this train stop at Central Station?\nB: ( )', options:["Yes, it does. It's the third stop.","No, I don't have a ticket.","It's very crowded.","I take the bus instead."], answer:0, exp:'停車するかどうかを尋ねられているので Yes/No で答えます。'},
+  {cat:'conv', text:'A: Would you mind lowering your voice? The baby is sleeping.\nB: ( )', options:["Oh, sorry. I didn't realize.","Yes, I would love to.","It's five dollars.","I like babies."], answer:0, exp:'注意されたことに対して謝る応答が自然です。'},
+  {cat:'conv', text:"A: What's wrong? You look worried.\nB: ( )", options:['I forgot my wallet at home.',"I'm going shopping later.","It's a nice day.","I like this song."], answer:0, exp:'心配された理由を答えるのが自然な流れです。'},
+  {cat:'conv', text:'A: Shall we take a taxi or walk?\nB: ( )', options:["Let's walk. It's not far.","I don't like taxis.","It's Tuesday.","I have no money."], answer:0, exp:'提案に対してどちらかを選んで理由を添える応答が自然です。'},
+  {cat:'conv', text:'A: Can you recommend a good restaurant near here?\nB: ( )', options:["Sure, there's a great Italian place around the corner.","I can't cook.","It's closed on Mondays.","I ate breakfast already."], answer:0, exp:'おすすめを聞かれているので具体的な提案で答えます。'},
+  {cat:'conv', text:"A: I'm thinking about joining the tennis club.\nB: ( )", options:['That sounds fun! You should try it.',"I don't like tennis balls.","It's raining today.","I'm too tired."], answer:0, exp:'相手の計画に対して前向きな反応をする応答が自然です。'},
+  {cat:'conv', text:'A: Sorry to keep you waiting.\nB: ( )', options:['No problem. I just got here myself.',"You're welcome.","I have no idea.","It's over there."], answer:0, exp:'待たせたことへの謝罪に対して気にしないと答える応答です。'},
+  {cat:'conv', text:'A: Do you know where the nearest ATM is?\nB: ( )', options:["Yes, it's right next to the supermarket.","I don't have any money.","It's two o'clock.","I like banks."], answer:0, exp:'場所を尋ねられているので場所で答えます。'},
+  {cat:'conv', text:'A: How do you like your new apartment?\nB: ( )', options:["I love it. It's much bigger than my old one.","It's next Tuesday.","I moved three boxes.","I don't have furniture."], answer:0, exp:'感想を聞かれているので感想を答えます。'},
+  {cat:'conv', text:'A: Could you turn down the music a little?\nB: ( )', options:['Sure, sorry about that.',"I don't have a radio.","It's too loud outside.","I bought new speakers."], answer:0, exp:'依頼に対して応じる応答が自然です。'},
+  {cat:'conv', text:'A: Have you ever been to Kyoto?\nB: ( )', options:['Yes, I went there last spring.',"It's a big city.","I have two brothers.","I like history books."], answer:0, exp:'経験を尋ねる現在完了の質問に体験で答えます。'},
+
+  // ---- reading (8) ----
+  {cat:'reading', text:'Why couldn\'t Tom walk his dog yesterday?', passage:'Tom is a junior high school student. Every morning, he walks his dog before breakfast. Yesterday, it was raining, so he could not walk the dog. Instead, he played with the dog in the living room. His dog was very happy.', options:['Because it was raining.','Because he was sick.','Because the dog was sick.','Because he had no time.'], answer:0, exp:'本文2文目に「雨が降っていたので散歩できなかった」とあります。'},
+  {cat:'reading', text:'What has Emma been doing since last summer?', passage:'Emma wants to study abroad next year. She has been saving money since last summer. She also practices English conversation with her friend every weekend. Her dream is to visit Canada and improve her English skills.', options:['Saving money','Visiting Canada','Teaching English','Working part-time'], answer:0, exp:'本文に「去年の夏からお金を貯めている」とあります。'},
+  {cat:'reading', text:'What did Yuki do last Saturday because the library was closed?', passage:'Yuki loves reading books. Every Saturday, she goes to the library near her house and borrows three or four books. Last Saturday, the library was closed for cleaning, so she went to a bookstore instead and bought a new novel.', options:['She went to a bookstore and bought a book.','She read books at home.','She waited until Sunday.','She borrowed books from a friend.'], answer:0, exp:'本文の最後に「代わりに書店へ行って新しい小説を買った」とあります。'},
+  {cat:'reading', text:"What happened to Kenji's team last month?", passage:'Kenji plays soccer for his school team. He practices every day after school, even when he is tired. Last month, his team won the city tournament for the first time in ten years. Kenji was very proud of his teammates.', options:['They won the city tournament.','They lost every game.','They stopped playing soccer.','They got a new coach.'], answer:0, exp:'本文に「先月、10年ぶりに市の大会で優勝した」とあります。'},
+  {cat:'reading', text:'What does Aya want to become in the future?', passage:'Aya works at a flower shop in the morning and studies at a language school in the evening. She wants to become an interpreter in the future. On weekends, she volunteers at an animal shelter because she loves animals.', options:['An interpreter','A florist','A teacher','A vet'], answer:0, exp:'本文中に「将来は通訳者になりたい」とはっきり書かれています。'},
+  {cat:'reading', text:'Why could the Tanaka family see thousands of stars?', passage:'Last weekend, the Tanaka family went camping in the mountains. They set up a tent by the river and cooked dinner over a fire. At night, they saw thousands of stars because there were no city lights. Everyone agreed it was the best trip of the year.', options:['Because there were no city lights.','Because they used a telescope.','Because it was a full moon.','Because they stayed up all night.'], answer:0, exp:'本文に「街の明かりがなかったので」と理由が書かれています。'},
+  {cat:'reading', text:'What does Daichi do every morning before school?', passage:'Daichi is on the swimming team at his school. Every morning before school, he swims for one hour at the pool near his house. He says swimming makes him feel energetic for the rest of the day. On weekends, he also teaches swimming to younger children.', options:['He swims for one hour.','He runs around the park.','He studies English.','He walks his dog.'], answer:0, exp:'本文の2文目に「毎朝1時間泳ぐ」とあります。'},
+  {cat:'reading', text:"What is Mei's part-time job?", passage:'Mei is a high school student who works part-time at a bakery near the station. She works there three days a week after school. She enjoys talking with customers and learning how to make bread. She hopes to open her own bakery someday.', options:['She works at a bakery.','She works at a bookstore.','She teaches piano lessons.','She works at a supermarket.'], answer:0, exp:'本文の最初に「駅の近くのパン屋でアルバイトをしている」とあります。'},
+  {cat:'reading', text:'How did Hiroshi start collecting stamps?', passage:'Hiroshi collects old stamps as a hobby. He started collecting when he was eight years old, after his grandfather gave him a box of stamps from different countries. Now he has more than five hundred stamps and often visits stamp shows on weekends.', options:['His grandfather gave him a box of stamps.','He bought them at a shop.','He found them in his attic.','His teacher gave them to him.'], answer:0, exp:'本文に「祖父が色々な国の切手が入った箱をくれた」とあります。'},
+  {cat:'reading', text:'What did Sara receive last year?', passage:'Sara works as a nurse at a hospital in the city. She usually works night shifts three times a week. Although the job is tiring, she enjoys helping patients feel better. Last year, she received an award for her kindness to patients.', options:['An award for her kindness to patients.','A promotion to doctor.','A new uniform.','A trip to another country.'], answer:0, exp:'本文の最後に「患者への優しさに対して賞を受け取った」とあります。'},
+  {cat:'reading', text:"What was special about this year's Green Festival?", passage:'The Green Festival is held every October in the park near the city hall. Local farmers sell fresh vegetables, and children can enjoy games and music. This year, more than ten thousand people visited the festival, which was the largest number ever.', options:['It had the largest number of visitors ever.','It was canceled due to rain.','It was held in a different park.','It lasted for one week.'], answer:0, exp:'本文の最後に「過去最多の来場者数だった」とあります。'},
+  {cat:'reading', text:'What was Ryo able to do after three months of practice?', passage:'Ryo wanted to improve his cooking skills, so he started watching online cooking videos every night. After three months of practice, he was able to cook a full dinner for his family without any help. His parents were very surprised and proud.', options:['Cook a full dinner for his family.','Open his own restaurant.','Teach a cooking class.','Bake a wedding cake.'], answer:0, exp:'本文に「家族のためにフルディナーを一人で作れるようになった」とあります。'},
+  {cat:'reading', text:'Who has been especially interested in the new e-book service?', passage:'The city library added a new section for e-books last month. Visitors can now borrow digital books using their smartphones and read them for up to two weeks. The library staff said the new service has become very popular among busy office workers.', options:['Busy office workers.','Elementary school students.','Elderly visitors.','Library staff members.'], answer:0, exp:'本文の最後に「忙しい会社員の間で人気になっている」とあります。'},
+  {cat:'reading', text:'How does Nana feel about her upcoming recital?', passage:'Nana practices the piano for thirty minutes every day before school. She has been taking piano lessons since she was five. Next month, she will perform in a recital for the first time, and she is both nervous and excited about it.', options:['Both nervous and excited.','Bored and tired.','Confident and calm.','Angry and upset.'], answer:0, exp:'本文の最後に「緊張もしているし、わくわくもしている」とあります。'},
+  {cat:'reading', text:'What time does the bakery owner wake up every day?', passage:"A new bakery opened near the train station last week. It sells fresh bread every morning, and by noon, most of the popular items are already sold out. The owner says she wakes up at four a.m. every day to start baking.", options:['Four a.m.','Six a.m.','Noon.','Midnight.'], answer:0, exp:'本文の最後に「毎日午前4時に起きてパンを焼き始める」とあります。'},
+];
+
+const CATS = {
+  vocab:   {label:'単語・熟語', tag:'VOCABULARY', desc:'空所に入る最も適切な語句を選びます。'},
+  grammar: {label:'文法',       tag:'GRAMMAR',    desc:'文法的に正しい形を見極める問題です。'},
+  conv:    {label:'会話表現',    tag:'DIALOGUE',   desc:'自然な受け答えを選ぶ問題です。'},
+  reading: {label:'読解',        tag:'READING',    desc:'短い英文を読んで内容を答えます。'},
+  all:     {label:'ランダム総合', tag:'MIX',        desc:'全カテゴリーからランダムに出題します。'}
+};
+
+const BATCH_SIZE = 10;
+
+/* ---------------- State ---------------- */
+let state = {
+  screen: 'start',
+  category: null,
+  queue: [],
+  idx: 0,
+  answers: [],
+  locked: false,
+};
+
+// remembers which questions have already been shown, per category,
+// so that each new round of 10 pulls a fresh set until the pool is exhausted.
+const pools = {};
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+// returns a copy of the question with its options (and answer index) freshly shuffled
+function shuffleOptions(q){
+  const order = shuffle(q.options.map((_,i)=>i));
+  const newOptions = order.map(i=>q.options[i]);
+  const newAnswer = order.indexOf(q.answer);
+  return Object.assign({}, q, {options:newOptions, answer:newAnswer});
+}
+
+function nextBatch(cat){
+  const source = cat === 'all' ? QUESTIONS : QUESTIONS.filter(q=>q.cat===cat);
+  const size = Math.min(BATCH_SIZE, source.length);
+
+  if(!pools[cat] || pools[cat].order.length - pools[cat].pos < size){
+    pools[cat] = {order: shuffle(source), pos: 0};
+  }
+  const p = pools[cat];
+  const batch = p.order.slice(p.pos, p.pos + size);
+  p.pos += size;
+  return batch.map(shuffleOptions);
+}
+
+function startQuiz(cat){
+  state.category = cat;
+  state.queue = nextBatch(cat);
+  state.idx = 0;
+  state.answers = [];
+  state.locked = false;
+  state.screen = 'quiz';
+  render();
+}
+
+function chooseOption(i){
+  if(state.locked) return;
+  state.locked = true;
+  const q = state.queue[state.idx];
+  state.answers.push({q, chosen:i, correct: i===q.answer});
+  render();
+}
+
+function nextQuestion(){
+  if(state.idx < state.queue.length - 1){
+    state.idx += 1;
+    state.locked = false;
+    render();
+  } else {
+    state.screen = 'result';
+    render();
+  }
+}
+
+function restart(){
+  state.screen = 'start';
+  render();
+}
+
+function retrySame(){
+  startQuiz(state.category);
+}
+
+/* ---------------- Render ---------------- */
+function render(){
+  const page = document.getElementById('page');
+  if(state.screen === 'start') page.innerHTML = renderStart();
+  else if(state.screen === 'quiz') page.innerHTML = renderQuiz();
+  else page.innerHTML = renderResult();
+  attachHandlers();
+}
+
+function renderStart(){
+  const cards = Object.entries(CATS).map(([key,c])=>{
+    const n = key==='all' ? QUESTIONS.length : QUESTIONS.filter(q=>q.cat===key).length;
+    const roundSize = Math.min(BATCH_SIZE, n);
+    return `
+      <button class="cat-card" data-cat="${key}">
+        <span class="count">全${n}問</span>
+        <span class="tag">${c.tag}</span>
+        <h3>${c.label}</h3>
+        <p>${c.desc}1回${roundSize}問出題されます。</p>
+      </button>`;
+  }).join('');
+
+  return `
+    <header class="top">
+      <div class="brand">
+        <span class="eyebrow">Eiken Grade 3 · Practice Notebook</span>
+        <h1>英検3級 practice ノート</h1>
+      </div>
+    </header>
+    <p class="start-lead">中学卒業〜高校初級レベルの単語・文法・会話表現・読解をノート形式で練習できます。カテゴリーを選んでスタートしましょう。答えると赤ペンでその場で採点されます。</p>
+    <p class="pool-note">※ 1回につき最大${BATCH_SIZE}問。同じカテゴリーをもう一度選ぶと、プールが尽きるまで別の問題セットが出題されます。</p>
+    <div class="cat-grid">${cards}</div>
+  `;
+}
+
+function renderQuiz(){
+  const q = state.queue[state.idx];
+  const total = state.queue.length;
+  const answered = state.answers.length;
+  const correctSoFar = state.answers.filter(a=>a.correct).length;
+  const pct = Math.round(((state.idx + (state.locked?1:0)) / total) * 100);
+
+  const optsHtml = q.options.map((opt,i)=>{
+    let cls = 'opt';
+    if(state.locked){
+      cls += ' locked';
+      if(i === q.answer) cls += ' correct';
+      else if(i === state.answers[state.answers.length-1].chosen) cls += ' wrong';
+    }
+    const letter = String.fromCharCode(65+i);
+    return `<button class="${cls}" data-i="${i}" ${state.locked?'disabled':''}>
+      <span class="letter">${letter}</span><span>${opt}</span>
+    </button>`;
+  }).join('');
+
+  let feedback = '';
+  if(state.locked){
+    const last = state.answers[state.answers.length-1];
+    feedback = `
+      <div class="feedback-row">
+        ${stampSVG(last.correct)}
+        <div class="feedback-text">
+          <b>${last.correct ? '正解！' : '不正解'}</b><br>
+          ${q.exp}
+        </div>
+      </div>`;
+  } else {
+    feedback = `<div class="feedback-row"></div>`;
+  }
+
+  return `
+    <header class="top">
+      <div class="brand">
+        <span class="eyebrow">${CATS[state.category].tag}</span>
+        <h1>${CATS[state.category].label}</h1>
+      </div>
+      <span class="score-chip">正解 <b>${correctSoFar}</b> / ${answered}</span>
+    </header>
+
+    <div class="progress-row">
+      <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <span class="progress-label">${state.idx+1} / ${total}</span>
+    </div>
+
+    <div class="q-eyebrow">Question ${state.idx+1}</div>
+    ${q.passage ? `<div class="q-passage">${q.passage}</div>` : ''}
+    <p class="q-text">${q.text.replace(/\n/g,'<br>')}</p>
+    ${q.jp ? `<p class="q-jp">${q.jp}</p>` : ''}
+
+    <div class="options">${optsHtml}</div>
+    ${feedback}
+
+    <div class="quiz-nav">
+      <button class="ghost-btn" data-action="quit">カテゴリー選択に戻る</button>
+      <button class="primary-btn gold" data-action="next" ${state.locked?'':'disabled'}>
+        ${state.idx < total-1 ? '次の問題へ' : '結果を見る'}
+      </button>
+    </div>
+  `;
+}
+
+function stampSVG(correct){
+  if(correct){
+    return `
+    <svg width="96" height="96" viewBox="0 0 100 100" style="flex-shrink:0">
+      <ellipse cx="50" cy="50" rx="38" ry="30" fill="none" stroke="#D6473A" stroke-width="5"
+        stroke-linecap="round" stroke-dasharray="230" stroke-dashoffset="230"
+        transform="rotate(-8 50 50)">
+        <animate attributeName="stroke-dashoffset" from="230" to="0" dur="0.5s" fill="freeze" />
+      </ellipse>
+    </svg>`;
+  }
+  return `
+    <svg width="96" height="96" viewBox="0 0 100 100" style="flex-shrink:0">
+      <line x1="25" y1="25" x2="75" y2="75" stroke="#D6473A" stroke-width="6" stroke-linecap="round"
+        stroke-dasharray="72" stroke-dashoffset="72">
+        <animate attributeName="stroke-dashoffset" from="72" to="0" dur="0.3s" fill="freeze" />
+      </line>
+      <line x1="75" y1="25" x2="25" y2="75" stroke="#D6473A" stroke-width="6" stroke-linecap="round"
+        stroke-dasharray="72" stroke-dashoffset="72">
+        <animate attributeName="stroke-dashoffset" from="72" to="0" dur="0.3s" begin="0.25s" fill="freeze" />
+      </line>
+    </svg>`;
+}
+
+function renderResult(){
+  const total = state.answers.length;
+  const correct = state.answers.filter(a=>a.correct).length;
+  const pctScore = Math.round((correct/total)*100);
+
+  let rating;
+  if(pctScore >= 90) rating = '花丸！ばっちりです';
+  else if(pctScore >= 70) rating = 'よくできました';
+  else if(pctScore >= 50) rating = 'もう少し！復習しよう';
+  else rating = '基礎から見直そう';
+
+  const cats = {};
+  state.answers.forEach(a=>{
+    cats[a.q.cat] = cats[a.q.cat] || {c:0,t:0};
+    cats[a.q.cat].t += 1;
+    if(a.correct) cats[a.q.cat].c += 1;
+  });
+  const bdRows = Object.entries(cats).map(([key,v])=>{
+    const p = Math.round((v.c/v.t)*100);
+    return `
+      <div class="bd-row">
+        <span class="bd-label">${CATS[key].label}</span>
+        <div class="bd-track"><div class="bd-fill" style="width:${p}%"></div></div>
+        <span class="bd-num">${v.c}/${v.t}</span>
+      </div>`;
+  }).join('');
+
+  const reviewRows = state.answers.map((a)=>{
+    const mark = a.correct ? '◯' : '✕';
+    return `
+      <div class="review-item ${a.correct?'':'miss'}">
+        <span class="mark">${mark}</span>
+        <span>${a.q.text.replace(/\n/g,' / ')}<br>
+        <span style="color:var(--ink-soft)">正解: ${a.q.options[a.q.answer]}</span></span>
+      </div>`;
+  }).join('');
+
+  const remaining = pools[state.category] ? pools[state.category].order.length - pools[state.category].pos : 0;
+  const nextNote = remaining > 0
+    ? `残り${remaining}問が次のセットに控えています。`
+    : `このカテゴリーの問題はすべて出題しました。次回はまた新しい組み合わせでシャッフルされます。`;
+
+  return `
+    <header class="top">
+      <div class="brand">
+        <span class="eyebrow">${CATS[state.category].tag} · Result</span>
+        <h1>採点結果</h1>
+      </div>
+    </header>
+
+    <div class="result-hero">
+      ${stampSVG(pctScore>=70)}
+      <div class="result-score">${correct}<span> / ${total} 問正解</span></div>
+      <h2>${rating}</h2>
+      <p class="sub">正答率 ${pctScore}%　・　${nextNote}</p>
+    </div>
+
+    <div class="breakdown">${bdRows}</div>
+
+    <div class="result-actions">
+      <button class="primary-btn" data-action="restart">カテゴリー選択に戻る</button>
+      <button class="primary-btn gold" data-action="retry">次の${Math.min(BATCH_SIZE, remaining>0?remaining:total)}問に進む</button>
+    </div>
+
+    <div class="review-list">${reviewRows}</div>
+  `;
+}
+
+function attachHandlers(){
+  document.querySelectorAll('[data-cat]').forEach(el=>{
+    el.addEventListener('click', ()=> startQuiz(el.dataset.cat));
+  });
+  document.querySelectorAll('.opt[data-i]').forEach(el=>{
+    el.addEventListener('click', ()=> chooseOption(parseInt(el.dataset.i)));
+  });
+  const nextBtn = document.querySelector('[data-action="next"]');
+  if(nextBtn) nextBtn.addEventListener('click', nextQuestion);
+  const quitBtn = document.querySelector('[data-action="quit"]');
+  if(quitBtn) quitBtn.addEventListener('click', restart);
+  const restartBtn = document.querySelector('[data-action="restart"]');
+  if(restartBtn) restartBtn.addEventListener('click', restart);
+  const retryBtn = document.querySelector('[data-action="retry"]');
+  if(retryBtn) retryBtn.addEventListener('click', retrySame);
+}
+
+render();
+</script>
+</body>
+</html>
