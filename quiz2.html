@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>てづくり英単語カード</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Klee+One:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF6EC;
+    --paper-dark:#F1E6D2;
+    --ink:#5B4636;
+    --ink-soft:#8A7462;
+    --pink:#F6D2D8;
+    --blue:#D3E6F0;
+    --yellow:#FCEEB0;
+    --green:#DCEEDA;
+    --coral:#E99B8C;
+    --correct:#BFE3B4;
+    --correct-ink:#3F6E3A;
+    --wrong:#F0B4AE;
+    --wrong-ink:#8C3B31;
+    --tape:#FFE9A8;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin:0; padding:0; min-height:100%;
+    font-family:'Klee One', sans-serif;
+    color: var(--ink);
+    background:
+      radial-gradient(circle at 15% 20%, rgba(255,255,255,0.5) 0, transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(255,255,255,0.4) 0, transparent 45%),
+      var(--paper);
+    background-attachment: fixed;
+    overflow-x:hidden;
+  }
+
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    pointer-events:none;
+    opacity:0.5;
+    background-image:
+      radial-gradient(rgba(90,70,55,0.05) 1px, transparent 1px);
+    background-size: 14px 14px;
+    z-index:0;
+  }
+
+  .doodles span{
+    position:fixed;
+    font-size:22px;
+    opacity:0.25;
+    transform:rotate(var(--r,0deg));
+    z-index:0;
+    user-select:none;
+    pointer-events:none;
+  }
+
+  .stage{
+    position:relative;
+    z-index:1;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding: 28px 16px 60px;
+  }
+
+  header.top{
+    text-align:center;
+    margin-bottom: 18px;
+  }
+  header.top h1{
+    font-family:'Kalam', cursive;
+    font-size: clamp(26px, 5vw, 40px);
+    margin: 0 0 4px;
+    color: var(--ink);
+    transform: rotate(-1.2deg);
+    display:inline-block;
+    letter-spacing: 1px;
+  }
+  header.top h1::after{
+    content:"";
+    display:block;
+    height:6px;
+    margin-top:2px;
+    background: repeating-linear-gradient(90deg, var(--coral) 0 8px, transparent 8px 14px);
+    border-radius:3px;
+    opacity:0.6;
+  }
+  header.top p{
+    margin:6px 0 0;
+    font-size:14px;
+    color: var(--ink-soft);
+  }
+
+  .progress-row{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .tag{
+    font-family:'Kalam', cursive;
+    background: var(--yellow);
+    padding: 6px 16px;
+    border-radius: 3px 12px 4px 14px / 10px 4px 12px 4px;
+    box-shadow: 1px 2px 0 rgba(90,70,55,0.15);
+    font-size: 15px;
+    transform: rotate(-2deg);
+    border: 1px solid rgba(90,70,55,0.15);
+  }
+  .tag.score{ background: var(--green); transform: rotate(1.5deg); }
+
+  /* CARD */
+  .card-wrap{
+    position:relative;
+    width: min(92vw, 480px);
+  }
+  .card-shadow{
+    position:absolute;
+    inset:6px -6px -10px 8px;
+    background: var(--paper-dark);
+    clip-path: polygon(2% 1%, 18% 0%, 42% 2%, 63% 0%, 88% 2%, 100% 0%, 99% 22%, 100% 48%, 97% 71%, 100% 99%, 74% 97%, 48% 100%, 22% 98%, 0% 100%, 3% 74%, 0% 46%, 2% 20%);
+    transform: rotate(2.5deg);
+    z-index:0;
+  }
+  .card{
+    position:relative;
+    z-index:1;
+    background: var(--paper);
+    padding: 34px 26px 26px;
+    clip-path: polygon(2% 0%, 15% 2%, 40% 0%, 60% 3%, 85% 0%, 98% 2%, 100% 20%, 97% 45%, 100% 70%, 98% 100%, 70% 98%, 45% 100%, 20% 97%, 0% 100%, 2% 70%, 0% 40%, 3% 15%);
+    box-shadow: 0 10px 24px rgba(90,70,55,0.18);
+    transform: rotate(-1deg);
+    min-height: 380px;
+    display:flex;
+    flex-direction:column;
+  }
+  .washi{
+    position:absolute;
+    width: 110px; height: 34px;
+    background: var(--tape);
+    opacity:0.85;
+    top:-16px; left:50%;
+    margin-left:-55px;
+    transform: rotate(-3deg);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  }
+  .washi::before, .washi::after{
+    content:"";
+    position:absolute; inset:0;
+    background: repeating-linear-gradient(135deg, rgba(255,255,255,0.35) 0 4px, transparent 4px 8px);
+  }
+  .washi.left{ left: 14%; top:-14px; transform: rotate(6deg); background: var(--pink); width:70px; height:26px; }
+  .washi.right{ left: auto; right: 10%; top:-14px; transform: rotate(-8deg); background: var(--blue); width:70px; height:26px; }
+
+  .word-area{
+    text-align:center;
+    padding: 6px 4px 22px;
+    border-bottom: 2px dashed rgba(90,70,55,0.25);
+    margin-bottom: 20px;
+  }
+  .pos-label{
+    display:inline-block;
+    font-size:12px;
+    color: var(--ink-soft);
+    background: var(--blue);
+    padding:2px 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    transform: rotate(-1deg);
+  }
+  .word{
+    font-family:'Kalam', cursive;
+    font-weight:700;
+    font-size: clamp(34px, 8vw, 52px);
+    margin: 4px 0 10px;
+    color: var(--ink);
+    word-break: break-word;
+  }
+  .example{
+    font-size: 14px;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin-bottom: 14px;
+  }
+  .speak-btn{
+    border:none;
+    background: var(--coral);
+    color: white;
+    width:48px; height:48px;
+    border-radius: 50% 48% 52% 46% / 46% 50% 48% 54%;
+    font-size:22px;
+    cursor:pointer;
+    box-shadow: 2px 3px 0 rgba(90,70,55,0.2);
+    transition: transform 0.12s ease;
+  }
+  .speak-btn:hover{ transform: scale(1.08) rotate(-4deg); }
+  .speak-btn:active{ transform: scale(0.95); }
+
+  .choices{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    flex:1;
+  }
+  @media (max-width: 420px){
+    .choices{ grid-template-columns: 1fr; }
+  }
+
+  .choice{
+    font-family:'Klee One', sans-serif;
+    font-size: 16px;
+    padding: 14px 12px;
+    border: none;
+    cursor:pointer;
+    text-align:center;
+    color: var(--ink);
+    box-shadow: 1px 3px 0 rgba(90,70,55,0.18);
+    transition: transform 0.12s ease, filter 0.12s ease;
+    border-radius: 6px 14px 6px 14px / 12px 6px 14px 6px;
+    line-height:1.4;
+  }
+  .choice:nth-child(1){ background: var(--pink); transform: rotate(-1.5deg); }
+  .choice:nth-child(2){ background: var(--blue); transform: rotate(1deg); }
+  .choice:nth-child(3){ background: var(--yellow); transform: rotate(-1deg); }
+  .choice:nth-child(4){ background: var(--green); transform: rotate(1.5deg); }
+  .choice:hover:not(:disabled){ filter: brightness(1.03); transform: scale(1.03) rotate(0deg); }
+  .choice:disabled{ cursor: default; }
+  .choice.correct{ background: var(--correct); color: var(--correct-ink); font-weight:600; transform: rotate(0deg) scale(1.03); }
+  .choice.wrong{ background: var(--wrong); color: var(--wrong-ink); transform: rotate(0deg); opacity:0.85; }
+
+  .feedback{
+    text-align:center;
+    min-height: 30px;
+    font-family:'Kalam', cursive;
+    font-size: 20px;
+    margin-top: 14px;
+  }
+  .feedback.ok{ color: var(--correct-ink); }
+  .feedback.no{ color: var(--wrong-ink); }
+
+  .next-btn{
+    display:block;
+    margin: 16px auto 0;
+    font-family:'Kalam', cursive;
+    font-size: 17px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 10px 26px;
+    border-radius: 20px;
+    cursor:pointer;
+    box-shadow: 2px 3px 0 rgba(0,0,0,0.15);
+    opacity:0;
+    pointer-events:none;
+    transition: opacity 0.2s ease, transform 0.12s ease;
+  }
+  .next-btn.show{ opacity:1; pointer-events:auto; }
+  .next-btn:hover{ transform: translateY(-2px); }
+
+  /* RESULT */
+  .result-card{
+    text-align:center;
+    padding: 20px 10px 6px;
+  }
+  .result-card h2{
+    font-family:'Kalam', cursive;
+    font-size: 30px;
+    margin: 4px 0 18px;
+    transform: rotate(-1deg);
+  }
+  .score-big{
+    font-family:'Kalam', cursive;
+    font-size: 56px;
+    color: var(--coral);
+    margin: 6px 0;
+  }
+  .score-msg{
+    font-size:16px;
+    color: var(--ink-soft);
+    margin-bottom: 20px;
+  }
+  .restart-btn{
+    font-family:'Kalam', cursive;
+    font-size: 18px;
+    background: var(--coral);
+    color: white;
+    border:none;
+    padding: 12px 30px;
+    border-radius: 22px;
+    cursor:pointer;
+    box-shadow: 2px 3px 0 rgba(90,70,55,0.25);
+  }
+  .restart-btn:hover{ transform: translateY(-2px); }
+
+  .hidden{ display:none !important; }
+</style>
+</head>
+<body>
+
+<div class="doodles" id="doodles"></div>
+
+<div class="stage">
+  <header class="top">
+    <h1>てづくり英単語カード</h1>
+    <p>カードをめくって、中学英単語を覚えよう ✎</p>
+  </header>
+
+  <div class="progress-row">
+    <div class="tag" id="progressTag">もんだい 1 / 15</div>
+    <div class="tag score" id="scoreTag">とくてん 0</div>
+  </div>
+
+  <div class="card-wrap">
+    <div class="card-shadow"></div>
+
+    <!-- QUIZ CARD -->
+    <div class="card" id="quizCard">
+      <div class="washi"></div>
+      <div class="washi left"></div>
+      <div class="washi right"></div>
+
+      <div class="word-area">
+        <span class="pos-label" id="posLabel">名詞</span>
+        <div class="word" id="wordText">apple</div>
+        <div class="example" id="exampleText">e.g. eat a banana</div>
+        <button class="speak-btn" id="speakBtn" title="読み上げる">🔊</button>
+      </div>
+
+      <div class="choices" id="choices"></div>
+      <div class="feedback" id="feedback"></div>
+      <button class="next-btn" id="nextBtn">つぎへ →</button>
+    </div>
+
+    <!-- RESULT CARD -->
+    <div class="card result-card hidden" id="resultCard">
+      <div class="washi"></div>
+      <h2>おつかれさま！</h2>
+      <div class="score-big" id="finalScore">0 / 15</div>
+      <div class="score-msg" id="finalMsg">よくがんばりました♪</div>
+      <button class="restart-btn" id="restartBtn">もういちど挑戦する</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------------- 単語データ（大阪版 中学校で学ぶ英単語集より抜粋） ---------------- */
+const WORDS = [
+  {en:"able", pos:"形", ja:"できる、能力がある", ex:"be able to speak English"},
+  {en:"about", pos:"前", ja:"～について", ex:"talk about music"},
+  {en:"abroad", pos:"副", ja:"外国に、海外へ", ex:"study abroad"},
+  {en:"accept", pos:"動", ja:"～を受け入れる", ex:"accept a present"},
+  {en:"across", pos:"前", ja:"～を横切って", ex:"walk across the street"},
+  {en:"act", pos:"動", ja:"行動する", ex:"act quickly"},
+  {en:"action", pos:"名", ja:"行動、行為", ex:"a plan of action"},
+  {en:"active", pos:"形", ja:"活発な", ex:"an active life"},
+  {en:"actor", pos:"名", ja:"俳優", ex:"a kabuki actor"},
+  {en:"add", pos:"動", ja:"～を加える", ex:"add some water"},
+  {en:"address", pos:"名", ja:"住所", ex:"my address"},
+  {en:"adult", pos:"名", ja:"大人、成人", ex:"become an adult"},
+  {en:"advice", pos:"名", ja:"忠告、アドバイス", ex:"give advice to her"},
+  {en:"afraid", pos:"形", ja:"恐れている、こわい", ex:"be afraid of the dark"},
+  {en:"again", pos:"副", ja:"もう一度", ex:"see him again"},
+  {en:"age", pos:"名", ja:"年齢", ex:"different ages"},
+  {en:"agree", pos:"動", ja:"賛成する", ex:"agree with you"},
+  {en:"airport", pos:"名", ja:"空港", ex:"arrive at the airport"},
+  {en:"almost", pos:"副", ja:"ほとんど、ほぼ", ex:"almost all of them"},
+  {en:"alone", pos:"副", ja:"一人で", ex:"go home alone"},
+  {en:"already", pos:"副", ja:"すでに、もう", ex:"have already cleaned the room"},
+  {en:"always", pos:"副", ja:"いつも、常に", ex:"She always drinks tea."},
+  {en:"amazing", pos:"形", ja:"驚くべき", ex:"an amazing experience"},
+  {en:"angry", pos:"形", ja:"怒った", ex:"I am angry with him."},
+  {en:"animal", pos:"名", ja:"動物", ex:"small animals"},
+  {en:"answer", pos:"名", ja:"答え、返事", ex:"give him an answer"},
+  {en:"apple", pos:"名", ja:"リンゴ", ex:"seven apples"},
+  {en:"area", pos:"名", ja:"地域、区域", ex:"in this area"},
+  {en:"arm", pos:"名", ja:"腕", ex:"my left arm"},
+  {en:"arrive", pos:"動", ja:"到着する", ex:"arrive at the station"},
+  {en:"art", pos:"名", ja:"美術、芸術", ex:"a museum of art"},
+  {en:"artist", pos:"名", ja:"芸術家", ex:"a famous artist"},
+  {en:"ask", pos:"動", ja:"たずねる、頼む", ex:"ask his name"},
+  {en:"astronaut", pos:"名", ja:"宇宙飛行士", ex:"want to be an astronaut"},
+  {en:"baby", pos:"名", ja:"赤ちゃん", ex:"a cute baby"},
+  {en:"bake", pos:"動", ja:"（パンなど）を焼く", ex:"bake cookies"},
+  {en:"bank", pos:"名", ja:"銀行", ex:"work for a bank"},
+  {en:"bath", pos:"名", ja:"入浴、風呂場", ex:"take a bath"},
+  {en:"beach", pos:"名", ja:"砂浜、海岸", ex:"go to the beach"},
+  {en:"beautiful", pos:"形", ja:"美しい", ex:"a beautiful picture"},
+  {en:"become", pos:"動", ja:"～になる", ex:"become a teacher"},
+  {en:"begin", pos:"動", ja:"始める、始まる", ex:"begin to walk"},
+  {en:"believe", pos:"動", ja:"信じる", ex:"believe him"},
+  {en:"bird", pos:"名", ja:"鳥", ex:"find a beautiful bird"},
+  {en:"birthday", pos:"名", ja:"誕生日", ex:"Today is his birthday."},
+  {en:"bored", pos:"形", ja:"退屈した", ex:"I am bored."},
+  {en:"borrow", pos:"動", ja:"～を借りる", ex:"borrow a pencil"},
+  {en:"bread", pos:"名", ja:"パン", ex:"eat bread"},
+  {en:"break", pos:"動", ja:"～を壊す", ex:"break the window"},
+  {en:"breakfast", pos:"名", ja:"朝食", ex:"have breakfast"},
+  {en:"bridge", pos:"名", ja:"橋", ex:"a big bridge"},
+  {en:"bright", pos:"形", ja:"輝いている、明るい", ex:"the bright sun"},
+  {en:"bring", pos:"動", ja:"～を持ってくる", ex:"bring some flowers"},
+  {en:"brown", pos:"形", ja:"茶色の", ex:"a brown bag"},
+  {en:"build", pos:"動", ja:"～を建てる", ex:"build a house"},
+  {en:"busy", pos:"形", ja:"忙しい", ex:"I am busy with my homework."},
+  {en:"careful", pos:"形", ja:"注意深い", ex:"Be careful."},
+  {en:"carry", pos:"動", ja:"～を運ぶ", ex:"carry a bag"},
+  {en:"catch", pos:"動", ja:"～をつかまえる", ex:"catch him"},
+  {en:"celebrate", pos:"動", ja:"～を祝う", ex:"celebrate her birthday"},
+  {en:"chance", pos:"名", ja:"機会、チャンス", ex:"have a chance to go"},
+  {en:"cheap", pos:"形", ja:"安い", ex:"a cheap computer"},
+  {en:"choose", pos:"動", ja:"～を選ぶ", ex:"choose the correct answer"},
+  {en:"classmate", pos:"名", ja:"同級生", ex:"classmates in high school"},
+  {en:"clean", pos:"動", ja:"～を掃除する", ex:"clean the floor"},
+  {en:"climb", pos:"動", ja:"～を登る", ex:"climb Mt. Fuji"},
+  {en:"cloudy", pos:"形", ja:"くもりの", ex:"It is cloudy today."},
+  {en:"collect", pos:"動", ja:"～を集める", ex:"collect postcards"},
+  {en:"college", pos:"名", ja:"大学", ex:"go to college"},
+  {en:"colorful", pos:"形", ja:"色彩に富んだ", ex:"a colorful bird"},
+  {en:"comfortable", pos:"形", ja:"心地よい、快適な", ex:"a comfortable sofa"},
+  {en:"common", pos:"形", ja:"ふつうの、共通の", ex:"the most common way"},
+  {en:"company", pos:"名", ja:"会社", ex:"work for a company"},
+  {en:"compare", pos:"動", ja:"～を比較する", ex:"compare the two"},
+  {en:"complete", pos:"動", ja:"～を完成させる", ex:"complete the job"},
+  {en:"continue", pos:"動", ja:"続く、続ける", ex:"continue to study"},
+  {en:"correct", pos:"形", ja:"正しい、正確な", ex:"the correct answer"},
+  {en:"country", pos:"名", ja:"国、いなか", ex:"live in this country"},
+  {en:"courage", pos:"名", ja:"勇気", ex:"have the courage to try"},
+  {en:"cousin", pos:"名", ja:"いとこ", ex:"She is my cousin."},
+  {en:"create", pos:"動", ja:"～を創造する", ex:"create something new"},
+  {en:"culture", pos:"名", ja:"文化", ex:"Japanese culture"},
+  {en:"custom", pos:"名", ja:"習慣、風習", ex:"an old custom"},
+  {en:"dangerous", pos:"形", ja:"危険な", ex:"a dangerous place"},
+  {en:"decide", pos:"動", ja:"決める", ex:"decide to do it"},
+  {en:"delicious", pos:"形", ja:"おいしい", ex:"delicious food"},
+  {en:"deliver", pos:"動", ja:"～を配達する", ex:"deliver the newspaper"},
+  {en:"describe", pos:"動", ja:"～を描写する", ex:"describe the scene"},
+  {en:"difficult", pos:"形", ja:"難しい、困難な", ex:"a difficult question"},
+  {en:"disappear", pos:"動", ja:"消える、いなくなる", ex:"disappear into the dark"},
+  {en:"discover", pos:"動", ja:"～を発見する", ex:"discover a new star"},
+  {en:"dream", pos:"名", ja:"夢、希望", ex:"My dream is to be a vet."},
+  {en:"early", pos:"形", ja:"（時期が）早い", ex:"get up early"},
+  {en:"earthquake", pos:"名", ja:"地震", ex:"a big earthquake"},
+  {en:"easily", pos:"副", ja:"簡単に、容易に", ex:"make friends easily"},
+  {en:"education", pos:"名", ja:"教育", ex:"Education is important."},
+  {en:"effort", pos:"名", ja:"努力", ex:"make an effort"},
+  {en:"encourage", pos:"動", ja:"～を勇気づける", ex:"encourage students"},
+  {en:"environment", pos:"名", ja:"（自然）環境", ex:"the natural environment"},
+  {en:"especially", pos:"副", ja:"特に、とりわけ", ex:"This is especially important."},
+  {en:"exam", pos:"名", ja:"試験、テスト", ex:"pass the exam"},
+  {en:"excited", pos:"形", ja:"興奮した、わくわくして", ex:"I was very excited."},
+  {en:"expensive", pos:"形", ja:"（値段が）高い", ex:"an expensive camera"},
+  {en:"experience", pos:"名", ja:"経験、体験", ex:"a good experience"},
+  {en:"explain", pos:"動", ja:"～を説明する", ex:"explain the meaning"},
+  {en:"factory", pos:"名", ja:"工場", ex:"a car factory"},
+  {en:"famous", pos:"形", ja:"有名な", ex:"a famous actor"},
+  {en:"farmer", pos:"名", ja:"農民、農場経営者", ex:"a fruit farmer"},
+  {en:"favorite", pos:"形", ja:"お気に入りの、大好きな", ex:"my favorite subject"},
+  {en:"festival", pos:"名", ja:"祭り、催し物", ex:"a music festival"},
+  {en:"finally", pos:"副", ja:"とうとう、ついに", ex:"finally arrived"},
+  {en:"forget", pos:"動", ja:"～を忘れる", ex:"forget my umbrella"},
+  {en:"forward", pos:"副", ja:"前に進んで", ex:"look forward to it"},
+  {en:"friendly", pos:"形", ja:"友好的な、親切な", ex:"She is friendly to me."},
+  {en:"friendship", pos:"名", ja:"友情", ex:"an old friendship"},
+  {en:"future", pos:"名", ja:"将来、未来", ex:"in the future"},
+  {en:"gather", pos:"動", ja:"～を集める、集まる", ex:"gather information"},
+  {en:"global", pos:"形", ja:"世界的な、地球全体の", ex:"global education"},
+  {en:"government", pos:"名", ja:"政府、自治体", ex:"the Japanese government"},
+  {en:"graduate", pos:"動", ja:"卒業する", ex:"graduate from school"},
+  {en:"grandparent", pos:"名", ja:"祖父母", ex:"visit my grandparents"},
+  {en:"grow", pos:"動", ja:"成長する、育つ", ex:"grow up"},
+  {en:"guess", pos:"動", ja:"～を推測する", ex:"guess the answer"},
+  {en:"happen", pos:"動", ja:"起こる、生じる", ex:"What happened?"},
+  {en:"health", pos:"名", ja:"健康", ex:"your health"},
+  {en:"healthy", pos:"形", ja:"健康な", ex:"He looks healthy."},
+  {en:"helpful", pos:"形", ja:"助けになる、役立つ", ex:"helpful ideas"},
+  {en:"hobby", pos:"名", ja:"趣味", ex:"my hobby"},
+  {en:"holiday", pos:"名", ja:"休日、祝日", ex:"a national holiday"},
+  {en:"homework", pos:"名", ja:"宿題", ex:"have a lot of homework"},
+  {en:"hospital", pos:"名", ja:"病院", ex:"in the hospital"},
+  {en:"however", pos:"副", ja:"しかしながら", ex:"However, it was cold."},
+  {en:"hungry", pos:"形", ja:"お腹の空いた", ex:"I'm really hungry."},
+  {en:"idea", pos:"名", ja:"考え、アイディア", ex:"a good idea"},
+  {en:"imagine", pos:"動", ja:"～を想像する", ex:"Can you imagine that?"},
+  {en:"important", pos:"形", ja:"大切な、重要な", ex:"an important book"},
+  {en:"improve", pos:"動", ja:"～を改善する、上達する", ex:"improve my English"},
+  {en:"increase", pos:"動", ja:"増える、増やす", ex:"The population is increasing."},
+  {en:"information", pos:"名", ja:"情報", ex:"collect information"},
+  {en:"instead", pos:"副", ja:"その代わりに", ex:"I went instead."},
+  {en:"instrument", pos:"名", ja:"道具、楽器", ex:"a musical instrument"},
+  {en:"interested", pos:"形", ja:"興味がある", ex:"I'm interested in science."},
+  {en:"interesting", pos:"形", ja:"おもしろい、興味深い", ex:"an interesting story"},
+  {en:"international", pos:"形", ja:"国際的な", ex:"an international flight"},
+  {en:"introduce", pos:"動", ja:"～を紹介する", ex:"introduce a friend"},
+  {en:"invent", pos:"動", ja:"～を発明する", ex:"invent the radio"},
+  {en:"invite", pos:"動", ja:"～を招待する", ex:"invite my friends"},
+  {en:"island", pos:"名", ja:"島", ex:"live on an island"},
+  {en:"job", pos:"名", ja:"仕事、作業", ex:"get a job as a teacher"},
+  {en:"joke", pos:"名", ja:"冗談", ex:"many funny jokes"},
+  {en:"kindness", pos:"名", ja:"親切、思いやり", ex:"Thank you for your kindness."},
+  {en:"language", pos:"名", ja:"言語、言葉", ex:"language and culture"},
+  {en:"laugh", pos:"動", ja:"（声を出して）笑う", ex:"laugh at a joke"},
+  {en:"lawyer", pos:"名", ja:"弁護士", ex:"work as a lawyer"},
+  {en:"library", pos:"名", ja:"図書館", ex:"study in a library"},
+  {en:"lonely", pos:"形", ja:"孤独な、さびしい", ex:"a lonely boy"},
+  {en:"lucky", pos:"形", ja:"幸運な", ex:"She is a lucky woman."},
+  {en:"machine", pos:"名", ja:"機械、装置", ex:"use the machine"},
+  {en:"magazine", pos:"名", ja:"雑誌", ex:"read a magazine"},
+  {en:"medicine", pos:"名", ja:"薬", ex:"a new medicine"},
+  {en:"memory", pos:"名", ja:"思い出、記憶", ex:"a good memory"},
+  {en:"mistake", pos:"名", ja:"誤り、間違い", ex:"a big mistake"},
+  {en:"museum", pos:"名", ja:"博物館、美術館", ex:"visit the museum"},
+  {en:"nervous", pos:"形", ja:"不安な、緊張して", ex:"get nervous"},
+  {en:"neighbor", pos:"名", ja:"隣人、近所の人", ex:"a neighbor's house"},
+  {en:"notice", pos:"動", ja:"～に気付く", ex:"notice a mistake"},
+  {en:"opportunity", pos:"名", ja:"機会、好機", ex:"find an opportunity"},
+  {en:"perfect", pos:"形", ja:"完全な、完璧な", ex:"Your answer is perfect."},
+  {en:"population", pos:"名", ja:"人口", ex:"the population of Japan"},
+  {en:"possible", pos:"形", ja:"可能な", ex:"It will be possible."},
+  {en:"prepare", pos:"動", ja:"～を準備する", ex:"prepare breakfast"},
+  {en:"probably", pos:"副", ja:"おそらく、たぶん", ex:"It will probably rain."},
+  {en:"protect", pos:"動", ja:"～を保護する、守る", ex:"protect the environment"},
+  {en:"proud", pos:"形", ja:"誇りをもっている", ex:"He is proud of his son."},
+  {en:"realize", pos:"動", ja:"～に気づく、悟る", ex:"realize the mistake"},
+  {en:"recently", pos:"副", ja:"最近、近ごろ", ex:"I got a letter recently."},
+  {en:"remember", pos:"動", ja:"～を思い出す、覚えている", ex:"remember her name"},
+  {en:"repair", pos:"動", ja:"～を修理する", ex:"repair the shoes"},
+  {en:"result", pos:"名", ja:"結果、成果", ex:"get the result"},
+  {en:"scientist", pos:"名", ja:"科学者", ex:"a great scientist"},
+  {en:"several", pos:"形", ja:"いくつかの", ex:"stay for several days"},
+  {en:"shy", pos:"形", ja:"恥ずかしがりの、内気な", ex:"He is very shy."},
+  {en:"similar", pos:"形", ja:"よく似た", ex:"That picture is similar."},
+  {en:"skill", pos:"名", ja:"技術、技能", ex:"an important skill"},
+  {en:"strange", pos:"形", ja:"奇妙な、不思議な", ex:"a strange story"},
+  {en:"suddenly", pos:"副", ja:"突然、急に", ex:"Suddenly, the door opened."},
+  {en:"surprised", pos:"形", ja:"驚いた", ex:"I'm surprised at the news."},
+  {en:"technology", pos:"名", ja:"科学技術", ex:"new technology"},
+  {en:"terrible", pos:"形", ja:"恐ろしい、ひどい", ex:"The news is so terrible."},
+  {en:"tradition", pos:"名", ja:"伝統、慣習", ex:"have a long tradition"},
+  {en:"traditional", pos:"形", ja:"伝統的な", ex:"traditional Japanese music"},
+  {en:"trouble", pos:"名", ja:"困ること、苦労", ex:"have a lot of trouble"},
+  {en:"understand", pos:"動", ja:"～を理解する", ex:"understand Japanese"},
+  {en:"unique", pos:"形", ja:"独特の、唯一の", ex:"a unique animal"},
+  {en:"useful", pos:"形", ja:"便利な、役に立つ", ex:"useful advice"},
+  {en:"vacation", pos:"名", ja:"休暇、休み", ex:"during the vacation"},
+  {en:"volunteer", pos:"名", ja:"ボランティア", ex:"work as a volunteer"},
+  {en:"wonderful", pos:"形", ja:"すばらしい、すてきな", ex:"have a wonderful time"},
+  {en:"worried", pos:"形", ja:"心配な、不安で", ex:"I'm worried about it."},
+
+  {en:"a", pos:"冠", ja:"一つの、一人の", ex:"a book"},
+  {en:"above", pos:"前", ja:"～の上に", ex:"above your head"},
+  {en:"according to", pos:"熟", ja:"～によれば", ex:"according to his report"},
+  {en:"affect", pos:"動", ja:"～に影響する", ex:"Daily practice affects my grade."},
+  {en:"against", pos:"前", ja:"～に反対して", ex:"against his advice"},
+  {en:"album", pos:"名", ja:"アルバム", ex:"make a photo album"},
+  {en:"aloud", pos:"副", ja:"声を出して", ex:"read it aloud"},
+  {en:"amount", pos:"名", ja:"量、額", ex:"a small amount of food"},
+  {en:"amusement park", pos:"名", ja:"遊園地", ex:"enjoy the amusement park"},
+  {en:"ancient", pos:"形", ja:"古代の", ex:"an ancient city"},
+  {en:"announcement", pos:"名", ja:"アナウンス、発表", ex:"the announcement of the plan"},
+  {en:"anymore", pos:"副", ja:"（否定文で）もはや", ex:"Don't cry anymore."},
+  {en:"appear", pos:"動", ja:"現れる、姿を現す", ex:"appear on the stage"},
+  {en:"application", pos:"名", ja:"アプリケーション", ex:"two music applications"},
+  {en:"aquarium", pos:"名", ja:"水族館", ex:"fish in the aquarium"},
+  {en:"attend", pos:"動", ja:"注意、関心", ex:"pay attention to it"},
+  {en:"attract", pos:"動", ja:"～を引き付ける", ex:"His smile attracts people."},
+  {en:"attractive", pos:"形", ja:"魅力的な", ex:"His smile is attractive."},
+  {en:"audience", pos:"名", ja:"聴衆、観客", ex:"in front of the audience"},
+  {en:"award", pos:"名", ja:"賞、賞品", ex:"win an award"},
+  {en:"backpack", pos:"名", ja:"バックパック", ex:"the heavy backpack"},
+  {en:"barrier", pos:"名", ja:"障壁、障害", ex:"a language barrier"},
+  {en:"basketball", pos:"名", ja:"バスケットボール", ex:"play basketball"},
+  {en:"battery", pos:"名", ja:"電池、バッテリー", ex:"change the batteries"},
+  {en:"beauty", pos:"名", ja:"美しさ、美", ex:"the beauty of the sea"},
+  {en:"beginner", pos:"名", ja:"初心者", ex:"rules for beginners"},
+  {en:"behind", pos:"前", ja:"～の後ろに", ex:"behind the trees"},
+  {en:"belong", pos:"動", ja:"～のものである、所属する", ex:"belong to the tennis club"},
+  {en:"beyond", pos:"前", ja:"～の向こうに", ex:"beyond the bridge"},
+  {en:"billion", pos:"名", ja:"１０億", ex:"billions of people"},
+  {en:"blackboard", pos:"名", ja:"黒板", ex:"write on the blackboard"},
+  {en:"blossom", pos:"名", ja:"花", ex:"cherry blossoms"},
+  {en:"bottom", pos:"名", ja:"底、いちばん下の所", ex:"from the bottom of my heart"},
+  {en:"brain", pos:"名", ja:"脳、頭脳", ex:"the left brain"},
+  {en:"brave", pos:"形", ja:"勇敢な、勇ましい", ex:"a brave dog"},
+  {en:"butterfly", pos:"名", ja:"チョウ", ex:"I found some butterflies."},
+  {en:"cabbage", pos:"名", ja:"キャベツ", ex:"I bought two cabbages."},
+  {en:"calligraphy", pos:"名", ja:"カリグラフィ、書道", ex:"the calligraphy club"},
+  {en:"cancer", pos:"名", ja:"（病気の）ガン", ex:"have cancer"},
+  {en:"cave", pos:"名", ja:"洞窟", ex:"explore a cave"},
+  {en:"ceremony", pos:"名", ja:"式、式典", ex:"the entrance ceremony"},
+  {en:"challenge", pos:"名", ja:"試練、挑戦", ex:"face a difficult challenge"},
+  {en:"character", pos:"名", ja:"登場人物、個性", ex:"a main character in the movie"},
+  {en:"cheerful", pos:"形", ja:"明るい、元気のある", ex:"a cheerful boy"},
+  {en:"choice", pos:"名", ja:"選択、選ぶこと", ex:"a very difficult choice"},
+  {en:"chorus", pos:"名", ja:"合唱、合唱部", ex:"She is in the chorus club."},
+  {en:"circle", pos:"動", ja:"～を丸で囲む、一周する", ex:"circle the answer"},
+  {en:"classroom", pos:"名", ja:"教室", ex:"in a classroom"},
+  {en:"clerk", pos:"名", ja:"係員、店員", ex:"a convenience store clerk"},
+  {en:"cloth", pos:"名", ja:"布、布地", ex:"wash the cloth"},
+  {en:"combine", pos:"動", ja:"結合する", ex:"combine the two ideas"},
+  {en:"comic", pos:"名", ja:"マンガ", ex:"read comics"},
+  {en:"communicate", pos:"動", ja:"伝え合う", ex:"communicate with him"},
+  {en:"communication", pos:"名", ja:"意思疎通", ex:"communication between people"},
+  {en:"concert", pos:"名", ja:"コンサート", ex:"go to a piano concert"},
+  {en:"condition", pos:"名", ja:"条件、状態", ex:"in bad condition"},
+  {en:"connect", pos:"動", ja:"～を結びつける、つなぐ", ex:"This road connects Tokyo and Kyoto."},
+  {en:"contest", pos:"名", ja:"試合、コンテスト", ex:"a speech contest"},
+  {en:"convenient", pos:"形", ja:"便利な、都合のよい", ex:"a convenient time to meet"},
+  {en:"conversation", pos:"名", ja:"会話、おしゃべり", ex:"have a conversation"},
+  {en:"correspond", pos:"動", ja:"対応する、一致する", ex:"correspond to it"},
+  {en:"cost", pos:"動", ja:"（費用が）かかる", ex:"cost 1,000 yen"},
+  {en:"count", pos:"動", ja:"（～を）数える", ex:"count the money"},
+  {en:"couple", pos:"名", ja:"２、３の、夫婦", ex:"a couple of days"},
+  {en:"cover", pos:"動", ja:"～をおおう", ex:"The mountain is covered with snow."},
+  {en:"crowded", pos:"形", ja:"混み合った、満員の", ex:"The train is crowded."},
+  {en:"cucumber", pos:"名", ja:"キュウリ", ex:"cut a cucumber"},
+  {en:"customer", pos:"名", ja:"客", ex:"Many customers came to the shop."},
+  {en:"damage", pos:"動", ja:"～に損害を与える", ex:"damage our health"},
+  {en:"dead", pos:"形", ja:"死んだ、枯れている", ex:"She is not dead."},
+  {en:"decorate", pos:"動", ja:"～を飾る", ex:"decorate the room"},
+  {en:"decrease", pos:"動", ja:"～を減らす、減少する", ex:"The number decreased."},
+  {en:"degree", pos:"名", ja:"（温度・角度の）度、学位", ex:"The temperature is 32 degrees."},
+  {en:"dentist", pos:"名", ja:"歯科医、歯医者", ex:"go to the dentist"},
+  {en:"depend", pos:"動", ja:"頼る、依存する", ex:"depend on you"},
+  {en:"design", pos:"名", ja:"デザイン、設計", ex:"the design of a house"},
+  {en:"destroy", pos:"動", ja:"～を破壊する", ex:"destroy the building"},
+  {en:"develop", pos:"動", ja:"発達する、開発する", ex:"develop technology"},
+  {en:"device", pos:"名", ja:"装置", ex:"many musical devices"},
+  {en:"diary", pos:"名", ja:"日記", ex:"write a diary"},
+  {en:"dictionary", pos:"名", ja:"辞書", ex:"buy a new dictionary"},
+  {en:"difference", pos:"名", ja:"違い、相違点", ex:"the difference between A and B"},
+  {en:"different", pos:"形", ja:"違った、様々な", ex:"a different culture"},
+  {en:"direction", pos:"名", ja:"方角、方向", ex:"walk in the same direction"},
+  {en:"dirty", pos:"形", ja:"汚い、汚れた", ex:"My shirt got dirty."},
+  {en:"disagree", pos:"動", ja:"反対する", ex:"disagree with him"},
+  {en:"disaster", pos:"名", ja:"災害、惨事", ex:"a natural disaster"},
+  {en:"diversity", pos:"名", ja:"多様性", ex:"diversity of nature"},
+  {en:"doll", pos:"名", ja:"人形", ex:"play with dolls"},
+  {en:"dolphin", pos:"名", ja:"イルカ", ex:"see a dolphin in the sea"},
+  {en:"drama", pos:"名", ja:"ドラマ、劇", ex:"an exciting drama"},
+  {en:"drone", pos:"名", ja:"ドローン", ex:"A drone was flying in the sky."},
+  {en:"during", pos:"前", ja:"～の間じゅう", ex:"during the vacation"},
+  {en:"eco-friendly", pos:"形", ja:"環境にやさしい", ex:"That car is eco-friendly."},
+  {en:"effective", pos:"形", ja:"効果的な、有効な", ex:"an effective way"},
+  {en:"either", pos:"副", ja:"（否定文で）～もまた", ex:"I didn't have any money and she didn't either."},
+  {en:"elderly", pos:"形", ja:"年配の", ex:"elderly people"},
+  {en:"electric", pos:"形", ja:"電気の", ex:"an electric bicycle"},
+  {en:"elementary school", pos:"名", ja:"小学校", ex:"go to elementary school"},
+  {en:"emergency", pos:"名", ja:"非常事態、緊急事態", ex:"The emergency bell rang."},
+  {en:"empty", pos:"形", ja:"からの、空いている", ex:"find an empty box"},
+  {en:"enough", pos:"形", ja:"十分な", ex:"enough food"},
+  {en:"enter", pos:"動", ja:"～に入る", ex:"enter the room"},
+  {en:"entrance", pos:"名", ja:"入口、入学", ex:"the back entrance"},
+  {en:"eraser", pos:"名", ja:"消しゴム", ex:"a black eraser"},
+  {en:"event", pos:"名", ja:"出来事、行事", ex:"sports events"},
+  {en:"exactly", pos:"副", ja:"ちょうど、まさしく", ex:"He arrived exactly at ten."},
+  {en:"exchange", pos:"名", ja:"交流、交換", ex:"an exchange of students"},
+  {en:"excuse", pos:"動", ja:"～を許す", ex:"Excuse me."},
+  {en:"exercise", pos:"名", ja:"運動、練習", ex:"get some exercise"},
+  {en:"express", pos:"動", ja:"～を表現する", ex:"express an idea"},
+  {en:"face", pos:"名", ja:"顔、面", ex:"Look at his face."},
+  {en:"fact", pos:"名", ja:"事実、現実", ex:"know the real fact"},
+  {en:"fail", pos:"動", ja:"失敗する", ex:"He failed many times."},
+  {en:"fantastic", pos:"形", ja:"すばらしい、すてきな", ex:"a fantastic performance"},
+  {en:"feature", pos:"名", ja:"特色、特徴", ex:"have a lot of great features"},
+  {en:"feed", pos:"動", ja:"～に食べ物を与える", ex:"feed my pets"},
+  {en:"feeling", pos:"名", ja:"感情、感覚", ex:"a good feeling"},
+  {en:"fever", pos:"名", ja:"熱、発熱", ex:"I have a fever."},
+  {en:"fiction", pos:"名", ja:"小説、フィクション", ex:"enjoy reading this fiction"},
+  {en:"field trip", pos:"名", ja:"遠足、校外学習", ex:"went on a field trip"},
+  {en:"fight", pos:"名", ja:"戦い、奮闘", ex:"had a fight"},
+  {en:"finger", pos:"名", ja:"（手の）指", ex:"the middle finger"},
+  {en:"firework", pos:"名", ja:"花火", ex:"see a lot of fireworks"},
+  {en:"fit", pos:"動", ja:"～に合う", ex:"The pants fit me."},
+  {en:"floor", pos:"名", ja:"ゆか、階", ex:"on the third floor"},
+  {en:"flute", pos:"名", ja:"フルート", ex:"She plays the flute."},
+  {en:"focus", pos:"名", ja:"中心、注意の集中", ex:"a focus of trouble"},
+  {en:"following", pos:"形", ja:"次の、あとに続く", ex:"the following questions"},
+  {en:"foreign", pos:"形", ja:"外国の", ex:"a foreign language"},
+  {en:"forever", pos:"副", ja:"永遠に、ずっと", ex:"remember her forever"},
+  {en:"fresh", pos:"形", ja:"新しい、新鮮な", ex:"fresh vegetables"},
+  {en:"fried", pos:"形", ja:"揚げ物にした", ex:"fried chicken"},
+  {en:"fruit", pos:"名", ja:"くだもの", ex:"fresh fruit"},
+  {en:"furniture", pos:"名", ja:"家具", ex:"a lot of furniture"},
+  {en:"garbage", pos:"名", ja:"ごみ", ex:"collect garbage"},
+  {en:"gate", pos:"名", ja:"門、搭乗口", ex:"open the gate"},
+  {en:"gender", pos:"名", ja:"性", ex:"Gender is a major topic."},
+  {en:"giraffe", pos:"名", ja:"キリン", ex:"saw a giraffe at the zoo"},
+  {en:"glad", pos:"形", ja:"（～して）うれしい", ex:"I'm glad to see you."},
+  {en:"glasses", pos:"名", ja:"めがね", ex:"He wears glasses."},
+  {en:"goal", pos:"名", ja:"目標、ゴール", ex:"my goal in life"},
+  {en:"grade", pos:"名", ja:"学年、成績", ex:"in the second grade"},
+  {en:"gram", pos:"名", ja:"グラム", ex:"100 grams is not heavy."},
+  {en:"grape", pos:"名", ja:"ブドウ", ex:"These grapes are delicious."},
+  {en:"greatly", pos:"副", ja:"大いに、非常に", ex:"It greatly changed."},
+  {en:"ground", pos:"名", ja:"地面、土地", ex:"sit on the ground"},
+  {en:"guest", pos:"名", ja:"客", ex:"A lot of guests came."},
+  {en:"guide", pos:"名", ja:"ガイド、案内人", ex:"a tour guide"},
+  {en:"gym", pos:"名", ja:"体育館、ジム", ex:"a school gym"},
+  {en:"handle", pos:"動", ja:"～を扱う、処理する", ex:"handle a problem"},
+  {en:"harmony", pos:"名", ja:"調和", ex:"live in harmony"},
+  {en:"headache", pos:"名", ja:"頭痛", ex:"have a headache"},
+  {en:"hero", pos:"名", ja:"英雄、ヒーロー", ex:"He is my hero."},
+  {en:"hide", pos:"動", ja:"隠れる、隠す", ex:"She hid something in the box."},
+  {en:"hiking", pos:"名", ja:"ハイキング", ex:"go hiking"},
+  {en:"hint", pos:"名", ja:"ヒント、手がかり", ex:"Give me a hint."},
+  {en:"hole", pos:"名", ja:"穴", ex:"a hole in the ground"},
+  {en:"hometown", pos:"名", ja:"ふるさと、故郷", ex:"Where is your hometown?"},
+  {en:"horror", pos:"名", ja:"恐怖、恐ろしさ", ex:"Snakes are a horror to me."},
+  {en:"hug", pos:"動", ja:"～を抱きしめる", ex:"hug my cat"},
+  {en:"huge", pos:"形", ja:"巨大な", ex:"a huge mountain"},
+  {en:"hunt", pos:"動", ja:"狩りをする、捜す", ex:"hunt a big bear"},
+  {en:"hurry", pos:"動", ja:"急ぐ", ex:"Hurry up!"},
+  {en:"hurt", pos:"動", ja:"痛む、傷つける", ex:"hurt my arm"},
+  {en:"impossible", pos:"形", ja:"不可能な", ex:"It is impossible to do."},
+  {en:"include", pos:"動", ja:"～を含む", ex:"The meal includes coffee."},
+  {en:"injured", pos:"形", ja:"傷ついた", ex:"I was injured."},
+  {en:"instruction", pos:"名", ja:"指示、指図", ex:"follow the instruction"},
+  {en:"interviewer", pos:"名", ja:"インタビューする人", ex:"many interviewers"},
+  {en:"inventor", pos:"名", ja:"発明家", ex:"Who was the inventor of the radio?"},
+  {en:"jam", pos:"名", ja:"ジャム", ex:"strawberry jam"},
+  {en:"jog", pos:"動", ja:"ジョギングする", ex:"I like jogging."},
+  {en:"join", pos:"動", ja:"～に参加する、加わる", ex:"join a soccer club"},
+  {en:"joy", pos:"名", ja:"喜び、うれしさ", ex:"feel great joy"},
+  {en:"judge", pos:"名", ja:"審判、審査員", ex:"a judge of a contest"},
+  {en:"jump", pos:"動", ja:"跳ぶ、はねる", ex:"jump into the river"},
+  {en:"kick", pos:"動", ja:"～を蹴る", ex:"kick a ball"},
+  {en:"kill", pos:"動", ja:"～を殺す", ex:"Many people were killed in the war."},
+  {en:"kindergarten", pos:"名", ja:"幼稚園", ex:"go to kindergarten"},
+  {en:"knock", pos:"動", ja:"ノックする", ex:"knock on the door"},
+  {en:"lack", pos:"名", ja:"不足", ex:"a lack of water"},
+  {en:"lady", pos:"名", ja:"女性、婦人", ex:"Hello, ladies!"},
+  {en:"land", pos:"名", ja:"土地、陸", ex:"dry land"},
+  {en:"landscape", pos:"名", ja:"風景、景色", ex:"a beautiful landscape"},
+  {en:"last", pos:"形", ja:"最後の、この前の", ex:"last night"},
+  {en:"laundry", pos:"名", ja:"洗濯、洗濯物", ex:"do the laundry"},
+  {en:"law", pos:"名", ja:"法律、法則", ex:"against the law"},
+  {en:"lazy", pos:"形", ja:"なまけている、怠惰な", ex:"Don't be lazy."},
+  {en:"leader", pos:"名", ja:"リーダー、指導者", ex:"choose Mary as our leader"},
+  {en:"leaf", pos:"名", ja:"葉、葉っぱ", ex:"a green leaf"},
+  {en:"leave", pos:"動", ja:"去る、出発する", ex:"leave home for the station"},
+  {en:"lend", pos:"動", ja:"（…に）～を貸す", ex:"lend him my bike"},
+  {en:"lettuce", pos:"名", ja:"レタス", ex:"grow lettuce"},
+  {en:"level", pos:"名", ja:"水準、段階", ex:"my English level"},
+  {en:"list", pos:"名", ja:"リスト、表", ex:"a list of books"},
+  {en:"local", pos:"形", ja:"地元の、その土地の", ex:"local people"},
+  {en:"lose", pos:"動", ja:"～を失う、負ける", ex:"lose a match"},
+  {en:"loud", pos:"形", ja:"（音・声が）大きい", ex:"a loud voice"},
+  {en:"male", pos:"名", ja:"雄、男性", ex:"an adult male"},
+  {en:"manage", pos:"動", ja:"何とかうまく～する", ex:"manage to solve the problem"},
+  {en:"marathon", pos:"名", ja:"マラソン", ex:"join a marathon"},
+  {en:"marry", pos:"動", ja:"（～と）結婚する", ex:"He married my sister."},
+  {en:"material", pos:"名", ja:"材料、素材", ex:"eco-friendly materials"},
+  {en:"medical", pos:"形", ja:"医療の、医学の", ex:"medical care"},
+  {en:"melon", pos:"名", ja:"メロン", ex:"pieces of melon"},
+  {en:"method", pos:"名", ja:"方法、方式", ex:"a new method of teaching"},
+  {en:"midnight", pos:"名", ja:"真夜中", ex:"quiet at midnight"},
+  {en:"million", pos:"名", ja:"１００万", ex:"three million people"},
+  {en:"mind", pos:"名", ja:"心、気持ち", ex:"in people's minds"},
+  {en:"mirror", pos:"名", ja:"鏡", ex:"look in the mirror"},
+  {en:"miss", pos:"動", ja:"見逃す、さみしく思う", ex:"miss the train"},
+  {en:"mission", pos:"名", ja:"使命、任務", ex:"a special mission"},
+  {en:"mobile phone", pos:"名", ja:"携帯電話", ex:"a mobile battery"},
+  {en:"modern", pos:"形", ja:"現代の、最新式の", ex:"modern technology"},
+  {en:"movement", pos:"名", ja:"運動、動き", ex:"social movement"},
+  {en:"musician", pos:"名", ja:"ミュージシャン、音楽家", ex:"a famous musician"},
+  {en:"narrow", pos:"形", ja:"狭い", ex:"a narrow bridge"},
+  {en:"national", pos:"形", ja:"国の、国立の", ex:"the national flower"},
+  {en:"natural", pos:"形", ja:"自然の、天然の", ex:"the natural world"},
+  {en:"nature", pos:"名", ja:"自然、自然界", ex:"the beauty of nature"},
+  {en:"necessary", pos:"形", ja:"必要な", ex:"necessary things"},
+  {en:"noise", pos:"名", ja:"音、騒音", ex:"hear a noise"},
+  {en:"novel", pos:"名", ja:"小説", ex:"a popular novel"},
+  {en:"nurse", pos:"名", ja:"看護師", ex:"become a nurse"},
+  {en:"ocean", pos:"名", ja:"海、海洋", ex:"swim in the ocean"},
+  {en:"offer", pos:"動", ja:"～を提供する", ex:"offer a good plan"},
+  {en:"official", pos:"形", ja:"公式の、正式の", ex:"an official event"},
+  {en:"opinion", pos:"名", ja:"意見、考え", ex:"talk about my opinion"},
+  {en:"organize", pos:"動", ja:"組織する、まとめる", ex:"organize the meeting"},
+  {en:"original", pos:"形", ja:"独創的な、最初の", ex:"the original idea"},
+  {en:"outdoor", pos:"形", ja:"戸外の、野外の", ex:"outdoor sports"},
+  {en:"overseas", pos:"副", ja:"海外へ、海外で", ex:"go overseas"},
+  {en:"owner", pos:"名", ja:"持ち主、所有者", ex:"the owner of the dog"},
+  {en:"pair", pos:"名", ja:"１対、１組", ex:"a pair of shoes"},
+  {en:"parade", pos:"名", ja:"パレード、行列", ex:"join a parade"},
+  {en:"partner", pos:"名", ja:"パートナー", ex:"my partner"},
+  {en:"passage", pos:"名", ja:"（文章の）一節", ex:"according to the passage"},
+  {en:"passenger", pos:"名", ja:"乗客、旅客", ex:"passengers on a train"},
+  {en:"passport", pos:"名", ja:"パスポート", ex:"get a passport"},
+  {en:"patient", pos:"名", ja:"患者、病人", ex:"take care of the patients"},
+  {en:"peaceful", pos:"形", ja:"平和な、おだやかな", ex:"peaceful places"},
+  {en:"percentage", pos:"名", ja:"パーセンテージ、割合", ex:"a high percentage"},
+  {en:"perform", pos:"動", ja:"（～を）演じる", ex:"perform a show"},
+  {en:"performance", pos:"名", ja:"演技、演奏、公演", ex:"a good performance"},
+  {en:"period", pos:"名", ja:"時代、（授業の）時間", ex:"the Edo period"},
+  {en:"personal", pos:"形", ja:"個人的な", ex:"a personal computer"},
+  {en:"pilot", pos:"名", ja:"パイロット、操縦士", ex:"a famous pilot"},
+  {en:"planet", pos:"名", ja:"惑星", ex:"the biggest planet"},
+  {en:"pleasure", pos:"名", ja:"喜び、楽しさ", ex:"the pleasure of listening to music"},
+  {en:"pocket", pos:"名", ja:"ポケット", ex:"in your pocket"},
+  {en:"police officer", pos:"名", ja:"警察官", ex:"She wants to be a police officer."},
+  {en:"popular", pos:"形", ja:"人気のある、流行の", ex:"a popular musician"},
+  {en:"positive", pos:"形", ja:"前向きな、積極的な", ex:"a positive way of thinking"},
+  {en:"powerful", pos:"形", ja:"力強い、強力な", ex:"become powerful in the world"},
+  {en:"pray", pos:"動", ja:"祈る", ex:"I prayed for rain."},
+  {en:"prefecture", pos:"名", ja:"県、府", ex:"Osaka prefecture"},
+  {en:"presentation", pos:"名", ja:"プレゼンテーション、発表", ex:"make a presentation"},
+  {en:"president", pos:"名", ja:"大統領、会長", ex:"the President of the United States"},
+  {en:"pressure", pos:"名", ja:"圧力", ex:"the pressure of the job"},
+  {en:"prize", pos:"名", ja:"賞、賞品", ex:"win the first prize"},
+  {en:"produce", pos:"動", ja:"生み出す、産出する", ex:"produce hundreds of cars"},
+  {en:"professional", pos:"形", ja:"プロの、専門職の", ex:"professional baseball"},
+  {en:"project", pos:"名", ja:"計画、企画", ex:"a project to build a new city"},
+  {en:"promise", pos:"名", ja:"約束", ex:"break our promise"},
+  {en:"provide", pos:"動", ja:"～を提供する、供給する", ex:"provide food"},
+  {en:"public", pos:"形", ja:"公の、公共の", ex:"a public library"},
+  {en:"quality", pos:"名", ja:"質、品質", ex:"good quality"},
+  {en:"quiet", pos:"形", ja:"静かな", ex:"a quiet place"},
+  {en:"race", pos:"名", ja:"競争、レース", ex:"Our race starts at 10 a.m."},
+  {en:"rainbow", pos:"名", ja:"虹", ex:"The rainbow has seven colors."},
+  {en:"raise", pos:"動", ja:"～を上げる、提起する", ex:"raise my hand"},
+  {en:"reach", pos:"動", ja:"～に着く、達する", ex:"reach the station"},
+  {en:"reason", pos:"名", ja:"理由、わけ", ex:"the real reason"},
+  {en:"receive", pos:"動", ja:"受け取る、もらう", ex:"receive a letter"},
+  {en:"recipe", pos:"名", ja:"レシピ、調理法", ex:"follow the recipe"},
+  {en:"recommend", pos:"動", ja:"（…に）～を勧める", ex:"recommend a good camera"},
+  {en:"record", pos:"名", ja:"記録", ex:"make a record of everything"},
+  {en:"recycle", pos:"動", ja:"～を再利用する", ex:"recycle newspapers"},
+  {en:"reduce", pos:"動", ja:"～を減らす", ex:"reduce waste of food"},
+  {en:"relax", pos:"動", ja:"くつろぐ", ex:"relax and enjoy the movie"},
+  {en:"remain", pos:"動", ja:"残る、とどまる", ex:"remained in the room"},
+  {en:"remind", pos:"動", ja:"思い出させる", ex:"remind me of the old days"},
+  {en:"remove", pos:"動", ja:"取り除く", ex:"remove the books"},
+  {en:"repeat", pos:"動", ja:"繰り返して言う", ex:"repeat the words"},
+  {en:"report", pos:"名", ja:"報告、レポート", ex:"a report from the city"},
+  {en:"reporter", pos:"名", ja:"新聞記者", ex:"a famous reporter"},
+  {en:"research", pos:"名", ja:"研究、調査", ex:"interesting research"},
+  {en:"researcher", pos:"名", ja:"研究者、調査員", ex:"researcher of the company"},
+  {en:"respect", pos:"動", ja:"～を尊敬する", ex:"She is respected by everyone."},
+  {en:"response", pos:"名", ja:"反応、返答", ex:"made no response"},
+  {en:"restroom", pos:"名", ja:"トイレ、お手洗い", ex:"a public restroom"},
+  {en:"return", pos:"動", ja:"戻る、帰る", ex:"return home from school"},
+  {en:"rich", pos:"形", ja:"金持ちの、豊かな", ex:"a rich person"},
+  {en:"role", pos:"名", ja:"役、役割", ex:"play different roles"},
+  {en:"rope", pos:"名", ja:"ロープ、縄", ex:"a rope bridge"},
+  {en:"rugby", pos:"名", ja:"ラグビー", ex:"a rugby fan"},
+  {en:"rule", pos:"名", ja:"規則、ルール", ex:"break a rule"},
+  {en:"safe", pos:"形", ja:"安全な、無事な", ex:"a safe place"},
+  {en:"sale", pos:"名", ja:"安売り、特売", ex:"We have a big sale now."},
+  {en:"scared", pos:"形", ja:"おびえた、こわがって", ex:"I felt scared."},
+  {en:"search", pos:"動", ja:"探す、調べる", ex:"search for my key"},
+  {en:"secret", pos:"名", ja:"秘密、秘けつ", ex:"It's a secret."},
+  {en:"select", pos:"動", ja:"選ぶ", ex:"select a present"},
+  {en:"sentence", pos:"名", ja:"文", ex:"a long sentence"},
+  {en:"serious", pos:"形", ja:"重大な、真剣な", ex:"a serious problem"},
+  {en:"service", pos:"名", ja:"サービス、接客", ex:"provide good service"},
+  {en:"shelter", pos:"名", ja:"避難所、保護", ex:"a shelter for the animal"},
+  {en:"shock", pos:"名", ja:"衝撃、ショック", ex:"a big shock"},
+  {en:"shoulder", pos:"名", ja:"肩", ex:"my shoulder"},
+  {en:"sightseeing", pos:"名", ja:"観光、見物", ex:"go sightseeing in Kyoto"},
+  {en:"sign", pos:"名", ja:"しるし、標識", ex:"as a sign of thanks"},
+  {en:"situation", pos:"名", ja:"立場、状況", ex:"in a dangerous situation"},
+  {en:"skin", pos:"名", ja:"皮ふ、肌", ex:"protect the skin"},
+  {en:"smell", pos:"名", ja:"におい", ex:"What a nice smell!"},
+  {en:"smile", pos:"名", ja:"ほほえみ、笑顔", ex:"with a smile"},
+  {en:"society", pos:"名", ja:"社会、世間", ex:"a small society"},
+  {en:"soil", pos:"名", ja:"土、土壌", ex:"good soil for growing flowers"},
+  {en:"solution", pos:"名", ja:"解決策", ex:"find the solution"},
+  {en:"solve", pos:"動", ja:"～を解決する", ex:"solve the problem"},
+  {en:"souvenir", pos:"名", ja:"みやげ", ex:"buy some souvenirs"},
+  {en:"species", pos:"名", ja:"（生物学上の）種", ex:"many species"},
+  {en:"specific", pos:"形", ja:"特定の、具体的な", ex:"a specific situation"},
+  {en:"speech", pos:"名", ja:"演説、スピーチ", ex:"make a speech"},
+  {en:"spread", pos:"動", ja:"広がる、広める", ex:"The news spread quickly."},
+  {en:"stadium", pos:"名", ja:"競技場、スタジアム", ex:"go to the stadium"},
+  {en:"staff", pos:"名", ja:"職員、従業員", ex:"ask the staff"},
+  {en:"statue", pos:"名", ja:"像、彫像", ex:"a statue of a famous character"},
+  {en:"step", pos:"名", ja:"歩み、段", ex:"the next step"},
+  {en:"stone", pos:"名", ja:"石", ex:"throw a stone"},
+  {en:"straight", pos:"形", ja:"まっすぐな", ex:"draw a straight line"},
+  {en:"strict", pos:"形", ja:"厳しい、厳格な", ex:"a strict rule"},
+  {en:"struggle", pos:"動", ja:"奮闘する", ex:"struggle to finish"},
+  {en:"subject", pos:"名", ja:"教科、話題", ex:"my favorite subject"},
+  {en:"success", pos:"名", ja:"成功", ex:"That was a success."},
+  {en:"successful", pos:"形", ja:"成功した", ex:"Our plan was successful."},
+  {en:"suggest", pos:"動", ja:"～を提案する", ex:"I suggest that we start now."},
+  {en:"suitcase", pos:"名", ja:"スーツケース", ex:"lost my suitcase"},
+  {en:"support", pos:"動", ja:"～を支援する、支える", ex:"support his family"},
+  {en:"suppose", pos:"動", ja:"～だと思う", ex:"Suppose you have a million dollars."},
+  {en:"surprise", pos:"名", ja:"驚き", ex:"have a surprise"},
+  {en:"survey", pos:"名", ja:"調査", ex:"do a survey"},
+  {en:"survive", pos:"動", ja:"生き残る", ex:"Only two people survived."},
+  {en:"sustainable", pos:"形", ja:"持続可能な", ex:"a sustainable way of living"},
+  {en:"system", pos:"名", ja:"装置、方式、体系", ex:"introduce a new system"},
+  {en:"tear", pos:"名", ja:"涙", ex:"with tears in his eyes"},
+  {en:"tent", pos:"名", ja:"テント", ex:"set up our tent"},
+  {en:"tour", pos:"名", ja:"旅行、見学", ex:"a bus tour"},
+  {en:"tourist", pos:"名", ja:"旅行者、観光客", ex:"a Japanese tourist"},
+  {en:"tournament", pos:"名", ja:"トーナメント、選手権大会", ex:"a tennis tournament"},
+  {en:"traffic", pos:"名", ja:"交通、往来", ex:"Traffic is heavy on the street."},
+  {en:"translate", pos:"動", ja:"～を訳す、翻訳する", ex:"translate the book"},
+  {en:"trash", pos:"名", ja:"ごみ、くず", ex:"pick up trash"},
+  {en:"treasure", pos:"名", ja:"宝物、財宝", ex:"a national treasure"},
+  {en:"truth", pos:"名", ja:"真実、事実", ex:"tell the truth"},
+  {en:"typhoon", pos:"名", ja:"台風", ex:"a big typhoon"},
+  {en:"unfair", pos:"形", ja:"不公平な、不当な", ex:"an unfair judge"},
+  {en:"unfortunately", pos:"副", ja:"不運にも、残念ながら", ex:"Unfortunately, the weather was not good."},
+  {en:"uniform", pos:"名", ja:"制服、ユニフォーム", ex:"wear a school uniform"},
+  {en:"universal", pos:"形", ja:"万人に通じる", ex:"Food is a universal need."},
+  {en:"university", pos:"名", ja:"大学", ex:"go to university"},
+  {en:"valuable", pos:"形", ja:"貴重な、価値のある", ex:"a valuable experience"},
+  {en:"variety", pos:"名", ja:"多種多様、いろいろ", ex:"a variety of drinks"},
+  {en:"various", pos:"形", ja:"さまざまな", ex:"in various ways"},
+  {en:"victim", pos:"名", ja:"犠牲者、被害者", ex:"victims of war"},
+  {en:"village", pos:"名", ja:"村", ex:"a small village"},
+  {en:"visitor", pos:"名", ja:"訪問者、観光客", ex:"visitors from all over the world"},
+  {en:"war", pos:"名", ja:"戦争、戦い", ex:"stop the war"},
+  {en:"waste", pos:"名", ja:"ごみ、浪費", ex:"waste of time"},
+  {en:"website", pos:"名", ja:"ウェブサイト", ex:"information on a website"},
+  {en:"wheelchair", pos:"名", ja:"車いす", ex:"a person in a wheelchair"},
+  {en:"wide", pos:"形", ja:"（幅が）広い", ex:"a wide road"},
+  {en:"wisdom", pos:"名", ja:"知恵、英知", ex:"a man of great wisdom"},
+  {en:"World Heritage Site", pos:"名", ja:"世界遺産", ex:"visit one of the World Heritage Sites"},
+  {en:"wrap", pos:"動", ja:"～を包む", ex:"wrap the book with paper"},
+  {en:"writer", pos:"名", ja:"作家、筆者", ex:"a popular writer"},
+];
+
+const QUIZ_LENGTH = 20;
+
+/* ---------------- 状態 ---------------- */
+let quiz = [];
+let current = 0;
+let score = 0;
+let answered = false;
+
+const els = {
+  progressTag: document.getElementById('progressTag'),
+  scoreTag: document.getElementById('scoreTag'),
+  posLabel: document.getElementById('posLabel'),
+  wordText: document.getElementById('wordText'),
+  exampleText: document.getElementById('exampleText'),
+  speakBtn: document.getElementById('speakBtn'),
+  choices: document.getElementById('choices'),
+  feedback: document.getElementById('feedback'),
+  nextBtn: document.getElementById('nextBtn'),
+  quizCard: document.getElementById('quizCard'),
+  resultCard: document.getElementById('resultCard'),
+  finalScore: document.getElementById('finalScore'),
+  finalMsg: document.getElementById('finalMsg'),
+  restartBtn: document.getElementById('restartBtn'),
+};
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function buildQuiz(){
+  const pool = shuffle(WORDS);
+  quiz = pool.slice(0, Math.min(QUIZ_LENGTH, WORDS.length));
+  current = 0;
+  score = 0;
+  answered = false;
+  els.resultCard.classList.add('hidden');
+  els.quizCard.classList.remove('hidden');
+  renderQuestion();
+}
+
+function renderQuestion(){
+  answered = false;
+  const q = quiz[current];
+  els.progressTag.textContent = `もんだい ${current+1} / ${quiz.length}`;
+  els.scoreTag.textContent = `とくてん ${score}`;
+  els.posLabel.textContent = posName(q.pos);
+  els.wordText.textContent = q.en;
+  els.exampleText.textContent = `e.g. ${q.ex}`;
+  els.feedback.textContent = '';
+  els.feedback.className = 'feedback';
+  els.nextBtn.classList.remove('show');
+
+  // 選択肢を作成：正解 + ランダムな不正解3つ
+  const wrongPool = WORDS.filter(w => w.ja !== q.ja);
+  const wrongs = shuffle(wrongPool).slice(0,3).map(w => w.ja);
+  const options = shuffle([q.ja, ...wrongs]);
+
+  els.choices.innerHTML = '';
+  options.forEach(optionJa => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.textContent = optionJa;
+    btn.addEventListener('click', () => selectAnswer(btn, optionJa, q.ja));
+    els.choices.appendChild(btn);
+  });
+}
+
+function posName(pos){
+  const map = {"名":"名詞","動":"動詞","形":"形容詞","副":"副詞","前":"前置詞","接":"接続詞","代":"代名詞","冠":"冠詞","間":"間投詞","助":"助動詞","熟":"熟語"};
+  return map[pos] || pos;
+}
+
+function selectAnswer(btn, chosen, correctJa){
+  if(answered) return;
+  answered = true;
+
+  const buttons = els.choices.querySelectorAll('.choice');
+  buttons.forEach(b => {
+    b.disabled = true;
+    if(b.textContent === correctJa) b.classList.add('correct');
+  });
+
+  if(chosen === correctJa){
+    score++;
+    els.feedback.textContent = '⭕ 正解！';
+    els.feedback.classList.add('ok');
+  } else {
+    btn.classList.add('wrong');
+    els.feedback.textContent = '❌ 不正解…';
+    els.feedback.classList.add('no');
+  }
+  els.scoreTag.textContent = `とくてん ${score}`;
+  els.nextBtn.classList.add('show');
+}
+
+function speakWord(){
+  const q = quiz[current];
+  if(!q) return;
+  if('speechSynthesis' in window){
+    speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(q.en);
+    utter.lang = 'en-US';
+    utter.rate = 0.9;
+    speechSynthesis.speak(utter);
+  }
+}
+
+function nextQuestion(){
+  current++;
+  if(current >= quiz.length){
+    showResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResult(){
+  els.quizCard.classList.add('hidden');
+  els.resultCard.classList.remove('hidden');
+  els.finalScore.textContent = `${score} / ${quiz.length}`;
+  const rate = score / quiz.length;
+  let msg;
+  if(rate === 1) msg = 'パーフェクト！すごい！🎉';
+  else if(rate >= 0.8) msg = 'すばらしい！その調子♪';
+  else if(rate >= 0.5) msg = 'よくがんばりました！';
+  else msg = 'もう一度挑戦して、力をつけよう！';
+  els.finalMsg.textContent = msg;
+}
+
+els.speakBtn.addEventListener('click', speakWord);
+els.nextBtn.addEventListener('click', nextQuestion);
+els.restartBtn.addEventListener('click', buildQuiz);
+
+/* 背景のちいさな落書き */
+(function initDoodles(){
+  const icons = ['✎','☆','♡','✂︎','✽','☺','♪','❀'];
+  const wrap = document.getElementById('doodles');
+  const positions = [
+    [4,8],[92,14],[8,55],[90,60],[6,88],[88,90],[50,4],[50,95]
+  ];
+  positions.forEach(([x,y],i)=>{
+    const s = document.createElement('span');
+    s.textContent = icons[i % icons.length];
+    s.style.left = x+'vw';
+    s.style.top = y+'vh';
+    s.style.setProperty('--r', (Math.random()*40-20)+'deg');
+    wrap.appendChild(s);
+  });
+})();
+
+buildQuiz();
+</script>
+</body>
+</html>
