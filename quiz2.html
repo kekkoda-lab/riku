@@ -1084,7 +1084,7 @@ function insertReturnLink(){
   link.style.width = '90%';
   link.style.maxWidth = '400px';
   link.style.textAlign = 'center';
-  link.style.background = '#828282';
+  link.style.background = '#626262';
   link.style.border = 'none';
   link.style.borderRadius = '12px';
   link.style.color = '#FFFFFF';
@@ -1095,8 +1095,8 @@ function insertReturnLink(){
   link.style.transition = 'background 0.2s';
   
   // マウスを乗せたときに少し明るくする設定
-  link.onmouseover = () => link.style.background = '#626262';
-  link.onmouseout = () => link.style.background = '#828282';
+  link.onmouseover = () => link.style.background = '#828282';
+  link.onmouseout = () => link.style.background = '#626262';
   
   // 選択肢エリア（els.choices）の直後に挿入することで、画像通りの一段上の位置に配置します
   if(els.choices && els.choices.parentNode){
