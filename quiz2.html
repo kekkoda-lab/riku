@@ -975,7 +975,7 @@ function buildQuiz(){
   els.quizCard.classList.remove('hidden');
   renderQuestion();
   
-  // 最初のページに戻るボタンを常に表示（初期化時に無ければ作成）
+  // 戻るボタンを適切な位置に挿入
   insertReturnLink();
 }
 
@@ -1068,34 +1068,39 @@ function showResult(){
   els.finalMsg.textContent = msg;
 }
 
-// 追加：最初のページ（1章）に戻るボタンリンクをノートカード内の一番下に自動挿入する関数
+// 変更：位置を少し上に移動させ、色をハッキリとした濃紺（#24344D）に変更
 function insertReturnLink(){
   if(document.getElementById('custom-back-btn')) return;
   
   const link = document.createElement('a');
   link.id = 'custom-back-btn';
   link.href = 'index.html';
-  link.textContent = '⬅ 最初のページ（1章）に戻る';
+  link.textContent = '⬅ 英検3級 practiceに戻る';
   
-  // ボタンのデザイン（ノートの雰囲気に合わせたスタイル）
+  // はっきりと視認しやすい濃紺ベースの白文字スタイル
   link.style.display = 'block';
-  link.style.margin = '24px auto 10px';
+  link.style.margin = '20px auto 16px';
   link.style.padding = '14px';
   link.style.width = '90%';
   link.style.maxWidth = '400px';
   link.style.textAlign = 'center';
-  link.style.background = '#F3EFE2';
-  link.style.border = '1px solid #D9D2BE';
+  link.style.background = '#24344D';
+  link.style.border = 'none';
   link.style.borderRadius = '12px';
-  link.style.color = '#24344D';
+  link.style.color = '#FFFFFF';
   link.style.textDecoration = 'none';
   link.style.fontSize = '16px';
   link.style.fontWeight = 'bold';
-  link.style.boxShadow = '0 2px 4px rgba(0,0,0,0.05)';
+  link.style.boxShadow = '0 4px 12px rgba(36, 52, 77, 0.15)';
+  link.style.transition = 'background 0.2s';
   
-  // 「次の問題へ」ボタンがある親要素の末尾（カード内の一番下）に追加
-  if(els.nextBtn && els.nextBtn.parentNode){
-    els.nextBtn.parentNode.appendChild(link);
+  // マウスを乗せたときに少し明るくする設定
+  link.onmouseover = () => link.style.background = '#324665';
+  link.onmouseout = () => link.style.background = '#24344D';
+  
+  // 選択肢エリア（els.choices）の直後に挿入することで、画像通りの一段上の位置に配置します
+  if(els.choices && els.choices.parentNode){
+    els.choices.parentNode.insertBefore(link, els.choices.nextSibling);
   }
 }
 
