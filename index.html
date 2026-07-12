@@ -105,24 +105,6 @@
     color: var(--ink-soft);
     margin: 4px 0 10px;
   }
-  
-  /* 追加したジャンプボタンのスタイル */
-  .next-page-link {
-    display: inline-block;
-    margin: 5px 0 20px 0;
-    padding: 10px 18px;
-    background-color: var(--paper-2);
-    border: 1px dashed var(--gold);
-    border-radius: 8px;
-    color: var(--ink);
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 16px;
-    transition: background-color 0.2s;
-  }
-  .next-page-link:hover {
-    background-color: var(--gold-soft);
-  }
 
   .pool-note{
     font-family:'Space Grotesk', sans-serif;
@@ -138,7 +120,7 @@
   }
   @media (max-width:600px){ .cat-grid{ grid-template-columns: 1fr; } }
 
-  .cat-card{
+  .cat-card, .next-page-card{
     text-align:left;
     background: #fff;
     border: 2px solid #E7E0CE;
@@ -150,12 +132,12 @@
     position:relative;
     overflow:hidden;
   }
-  .cat-card:hover{
+  .cat-card:hover, .next-page-card:hover{
     transform: translateY(-2px);
     border-color: var(--gold);
     box-shadow: 0 10px 22px -14px rgba(36,52,77,0.35);
   }
-  .cat-card .tag{
+  .cat-card .tag, .next-page-card .tag{
     font-family:'Space Grotesk', sans-serif;
     font-size:13px;
     letter-spacing:.08em;
@@ -163,11 +145,18 @@
     text-transform:uppercase;
     font-weight:700;
   }
-  .cat-card h3{ margin: 8px 0 6px; font-size: 22px; font-weight:700; color: var(--ink); }
-  .cat-card p{ margin:0; font-size:15px; color: var(--ink-soft); line-height:1.6; }
+  .cat-card h3, .next-page-card h3{ margin: 8px 0 6px; font-size: 22px; font-weight:700; color: var(--ink); }
+  .cat-card p, .next-page-card p{ margin:0; font-size:15px; color: var(--ink-soft); line-height:1.6; }
   .cat-card .count{
     position:absolute; top:16px; right:18px;
     font-family:'Space Grotesk', sans-serif; font-size:13px; color: var(--gray);
+  }
+  
+  /* 追加リンクカード用の調整スタイル */
+  .next-page-card {
+    text-decoration: none;
+    background: var(--paper-2);
+    border: 2px dashed #D9D2BE;
   }
 
   .primary-btn{
@@ -359,7 +348,7 @@ const QUESTIONS = [
   {cat:'conv', text:'A: Sorry to keep you waiting.\nB: ( )', options:['No problem. I just got here myself.',"You're welcome.","I have no idea.","It's over there."], answer:0, exp:'待たせたことへの謝罪に対して気にしないと答える応答です。'},
   {cat:'conv', text:'A: Do you know where the nearest ATM is?\nB: ( )', options:["Yes, it's right next to the supermarket.","I don't have any money.","It's two o'clock.","I like banks."], answer:0, exp:'場所を尋ねられているので場所で答えます。'},
   {cat:'conv', text:'A: How do you like your new apartment?\nB: ( )', options:["I love it. It's much bigger than my old one.","It's next Tuesday.","I moved three boxes.","I don't have furniture."], answer:0, exp:'感想を聞かれているので感想を答えます。'},
-  {cat:'conv', text:'A: Could you turn down the music a little?\nB: ( )', options:['Sure, sorry about that.',"I don't have a radio.","It's too loud outside.","I bought new speakers."], answer:0, exp:'依頼に対して応じる応答が自然です。'},
+  {cat:'conv', text:'Could you turn down the music a little?\nB: ( )', options:['Sure, sorry about that.',"I don't have a radio.","It's too loud outside.","I bought new speakers."], answer:0, exp:'依頼に対して応じる応答が自然です。'},
   {cat:'conv', text:'A: Have you ever been to Kyoto?\nB: ( )', options:['Yes, I went there last spring.',"It's a big city.","I have two brothers.","I like history books."], answer:0, exp:'経験を尋ねる現在完了の質問に体験で答えます。'},
 
   // ---- reading (8) ----
@@ -491,6 +480,15 @@ function renderStart(){
       </button>`;
   }).join('');
 
+  // 赤丸の位置（MIXの右側）に点線のカード型リンクを結合する
+  const finalGridHtml = cards + `
+    <a href="quiz2.html" class="next-page-card">
+      <span class="tag">Next Chapter</span>
+      <h3>他の単語問題はこちら</h3>
+      <p>新しく用意した「2章」のクイズページへ直接移動します。</p>
+    </a>
+  `;
+
   return `
     <header class="top">
       <div class="brand">
@@ -499,12 +497,8 @@ function renderStart(){
       </div>
     </header>
     <p class="start-lead">中学卒業〜高校初級レベルの単語・文法・会話表現・読解をノート形式で練習できます。カテゴリーを選んでスタートしましょう。答えると赤ペンでその場で採点されます。</p>
-    
-    <!-- 追加：別のクイズページへジャンプするボタンリンク -->
-    <a href="quiz2.html" class="next-page-link">👉 2章（新しい問題）に挑戦する場合はこちら</a>
-    
     <p class="pool-note">※ 1回につき最大${BATCH_SIZE}問。同じカテゴリーをもう一度選ぶと、プールが尽きるまで別の問題セットが出題されます。</p>
-    <div class="cat-grid">${cards}</div>
+    <div class="cat-grid">${finalGridHtml}</div>
   `;
 }
 
