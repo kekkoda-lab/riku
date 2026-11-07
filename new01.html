@@ -904,7 +904,14 @@ function renderStart(){
     </header>
     <p class="start-lead">中学卒業〜高校初級レベルの単語・文法・会話表現・読解をノート形式で練習できます。カテゴリーを選んでスタートしましょう。答えると赤ペンでその場で採点されます。</p>
     <p class="pool-note">※ 1回につき最大${BATCH_SIZE}問。同じカテゴリーをもう一度選ぶと、プールが尽きるまで別の問題セットが出題されます。</p>
-    <div class="cat-grid">${cards}</div>
+        <div class="cat-grid">${cards}
+      <a class="cat-card" href="/riku/eiken3_writing.html" style="display:block;text-decoration:none;color:inherit">
+        <span class="count">10問</span>
+        <span class="tag">WRITING</span>
+        <h3>ライティング</h3>
+        <p>意見と理由2つを英語で書く練習です。</p>
+      </a>
+    </div>
   `;
 }
 
