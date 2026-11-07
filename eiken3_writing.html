@@ -49,6 +49,8 @@ ul.chk{list-style:none;padding:0;margin:8px 0;font-size:15px}
 .model{background:#F1F7F3;color:#24344D;border:2px solid var(--ok);border-radius:12px;padding:14px 18px}
 .model p{margin:4px 0}
 .note{font-size:13px;color:var(--soft);margin:4px 0}
+.back{display:inline-block;margin:0 0 10px;padding:8px 14px;border:2px solid var(--line);border-radius:10px;color:var(--soft);font-weight:700;font-size:14px;text-decoration:none}
+.back:hover{border-color:var(--ink);color:var(--ink)}
 </style>
 </head>
 <body>
@@ -99,7 +101,8 @@ function render(){
   :`<label>あなたの答え（意見 + 理由2つ）</label>
     <textarea id="free" placeholder="I think ... First, ... Second, ...">${esc(d.free)}</textarea>
     <p class="note">型: I think ~. / First, ~. / Second, ~.</p>`;
-  $('#page').innerHTML=`<h1>英検3級 ライティング練習</h1>
+  $('#page').innerHTML=`<a class="back" href="/riku/new01">カテゴリー選択に戻る</a>
+  <h1>英検3級 ライティング練習</h1>
   <p class="sub">意見＋理由2つを、25〜35語で書こう</p>
   <div class="tabs"><button class="tab${S.mode==='template'?' on':''}" data-m="template">型つき（穴うめ）</button><button class="tab${S.mode==='free'?' on':''}" data-m="free">自由に書く</button></div>
   <div class="pills">${pills}</div>
