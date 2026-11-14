@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>凌空の勉強メニュー</title>
+<style>
+:root{
+  --paper:#f3f7fa; --card:#ffffff; --ink:#1d2b53; --sub:#5b6785; --grid:#dce6ee; --line:#c9d6e2;
+  --red:#d6303a; --shadow:rgba(29,43,83,.12);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#141a2b; --card:#1d2540; --ink:#eaf0ff; --sub:#9fb0d6; --grid:#1f2a46; --line:#33406a;
+    --red:#ff6b74; --shadow:rgba(0,0,0,.4);
+    color-scheme: dark;
+  }
+}
+*{box-sizing:border-box}
+html{height:100%}
+body{
+  margin:0; min-height:100%;
+  padding:max(20px,env(safe-area-inset-top)) 16px max(32px,env(safe-area-inset-bottom));
+  font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI","Meiryo",sans-serif;
+  color:var(--ink); background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px;
+  line-height:1.6;
+}
+main{max-width:760px;margin:0 auto}
+header{margin:12px 0 22px}
+h1{
+  margin:0; font-size:clamp(26px,6vw,38px); letter-spacing:.04em; line-height:1.25;
+  display:inline-block; padding:2px 14px 4px 10px;
+  background:linear-gradient(transparent 58%, color-mix(in srgb,var(--red) 28%,transparent) 58%);
+}
+header p{margin:8px 0 0;color:var(--sub);font-size:15px}
+.grid{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:640px){.grid{grid-template-columns:1fr 1fr}.grid .wide{grid-column:1/-1}}
+a.app{
+  position:relative; display:block; text-decoration:none; color:inherit;
+  background:var(--card); border:1.5px solid var(--line); border-left:8px solid var(--c);
+  border-radius:6px 14px 14px 6px; padding:16px 16px 16px 18px;
+  box-shadow:0 2px 0 var(--shadow);
+  transition:transform .12s ease, box-shadow .12s ease;
+}
+a.app:hover{transform:translate(-1px,-2px);box-shadow:0 5px 0 var(--shadow)}
+a.app:active{transform:translateY(1px);box-shadow:none}
+a.app:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+.ico{font-size:30px;line-height:1}
+.ttl{display:block;margin:8px 0 2px;font-size:19px;font-weight:700;line-height:1.35}
+.dsc{display:block;color:var(--sub);font-size:14px}
+.tag{display:inline-block;margin-top:10px;padding:1px 10px;font-size:12.5px;font-weight:600;
+  color:var(--c);border:1.5px solid var(--c);border-radius:99px;background:transparent}
+.last{position:absolute;top:10px;right:12px;font-size:12px;font-weight:700;color:#fff;background:var(--red);
+  padding:1px 9px;border-radius:99px;display:none}
+a.app.is-last .last{display:block}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .last{color:#1a0b0d}}
+
+.stat{display:block;margin-top:8px;font-size:13px;font-weight:600;color:var(--sub)}
+.rec{margin-top:28px;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:16px}
+.rec h2{margin:0 0 12px;font-size:18px}
+.sum{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.sum div{flex:1 1 90px;border:1.5px solid var(--line);border-radius:10px;padding:8px 12px}
+.sum b{display:block;font-size:24px;line-height:1.3}
+.sum span{font-size:12.5px;color:var(--sub)}
+.bars{display:flex;align-items:flex-end;gap:4px;height:80px;border-bottom:2px solid var(--line)}
+.bars i{flex:1;background:var(--red);border-radius:3px 3px 0 0;min-height:3px}
+.bars i.z{background:var(--line)}
+.axis{display:flex;gap:4px;font-size:11px;color:var(--sub);margin-top:2px}
+.axis span{flex:1;text-align:center}
+.cap{margin:6px 0 0;font-size:12.5px;color:var(--sub)}
+ul.hist{list-style:none;margin:14px 0 0;padding:0;font-size:14px}
+ul.hist li{display:flex;gap:8px;align-items:baseline;padding:7px 0;border-top:1px solid var(--line)}
+ul.hist .d{flex:0 0 78px;color:var(--sub);font-size:12.5px}
+ul.hist .l{flex:1;min-width:0;word-break:break-all}
+ul.hist .s{flex:0 0 auto;font-weight:700;white-space:nowrap}
+ul.hist .s.lo{color:var(--red)}
+details{margin-top:30px;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:4px 16px}
+summary{cursor:pointer;font-weight:700;padding:12px 0;font-size:15px}
+details .body{padding:2px 0 16px;font-size:14px}
+details p{margin:0 0 10px;color:var(--sub)}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px}
+button{font:inherit;font-size:14px;font-weight:600;cursor:pointer;color:var(--ink);background:var(--paper);
+  border:1.5px solid var(--line);border-radius:8px;padding:8px 14px}
+button:hover{border-color:var(--ink)}
+button.danger{color:var(--red);border-color:var(--red)}
+.wrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:13px;min-width:420px}
+th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--line);vertical-align:top;word-break:break-all}
+th{background:var(--paper);font-weight:700}
+#msg{min-height:1.4em;font-weight:600;color:var(--red)}
+footer{margin-top:26px;text-align:center;color:var(--sub);font-size:12.5px}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>凌空の勉強メニュー</h1>
+    <p>やりたいものを選んでね。</p>
+  </header>
+
+  <nav class="grid" aria-label="アプリ一覧">
+    <a class="app wide" data-id="ch1" href="ch1_study_app_v06.html" style="--c:#d6303a">
+      <span class="last">前回</span>
+      <span class="ico" aria-hidden="true">📕</span>
+      <span class="ttl">中1 定期テスト学習アプリ</span>
+      <span class="dsc">赤シートで隠して覚える、中1の定期テスト用。</span>
+      <span class="stat" data-stat="ch1"></span><span class="tag">赤シート付</span>
+    </a>
+    <a class="app" data-id="claude" href="claude.html" style="--c:#2f6fed">
+      <span class="last">前回</span>
+      <span class="ico" aria-hidden="true">📝</span>
+      <span class="ttl">中間テスト対策</span>
+      <span class="dsc">単元ごとに練習できる。</span>
+      <span class="stat" data-stat="claude"></span><span class="tag">単元別・全251問</span>
+    </a>
+    <a class="app" data-id="gemini" href="gemini.html" style="--c:#12a07a">
+      <span class="last">前回</span>
+      <span class="ico" aria-hidden="true">🎯</span>
+      <span class="ttl">定期テスト対策</span>
+      <span class="dsc">単元ごとにサクッと確認。</span>
+      <span class="stat" data-stat="gemini"></span><span class="tag">単元別・全100問</span>
+    </a>
+    <a class="app" data-id="quiz" href="index_claude.html" style="--c:#e08a00">
+      <span class="last">前回</span>
+      <span class="ico" aria-hidden="true">🧩</span>
+      <span class="ttl">四択問題クイズ集</span>
+      <span class="dsc">選んで答えるクイズ形式。</span>
+      <span class="stat" data-stat="quiz"></span><span class="tag">4択・各30問</span>
+    </a>
+    <a class="app" data-id="eng" href="Eng_03.html" style="--c:#8a4fd8">
+      <span class="last">前回</span>
+      <span class="ico" aria-hidden="true">🔤</span>
+      <span class="ttl">英語準備</span>
+      <span class="dsc">英語のテスト前の総まとめ。</span>
+      <span class="stat" data-stat="eng"></span><span class="tag">総合</span>
+    </a>
+  </nav>
+
+  <section class="rec" aria-labelledby="recT">
+    <h2 id="recT">学習のきろく</h2>
+    <div class="sum" id="sum"></div>
+    <div class="bars" id="bars" role="img" aria-label="直近14日間に取り組んだ回数"></div>
+    <div class="axis" id="axis" aria-hidden="true"></div>
+    <p class="cap">直近14日間に取り組んだ回数</p>
+    <ul class="hist" id="hist"></ul>
+  </section>
+
+  <details id="data">
+    <summary>保存データの確認・バックアップ</summary>
+    <div class="body">
+      <p>各アプリの成績やスコアは、この端末のこのブラウザに保存されています。機種変更やブラウザのデータ削除で消えるので、ときどきバックアップしておくと安心です。</p>
+      <div class="btns">
+        <button id="btnExport" type="button">バックアップを保存</button>
+        <button id="btnImport" type="button">バックアップから戻す</button>
+        <button id="btnRefresh" type="button">一覧を更新</button>
+        <input id="file" type="file" accept="application/json,.json" hidden>
+      </div>
+      <div id="msg" role="status"></div>
+      <div class="wrap">
+        <table>
+          <thead><tr><th>保存名(キー)</th><th>サイズ</th><th>中身の先頭</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </details>
+
+  <footer>1つのURLからぜんぶ開けます。ホーム画面に追加しておくと便利。</footer>
+</main>
+
+<script>
+(function(){
+  var LAST_KEY = "riku_menu_last";
+  var msg = document.getElementById("msg");
+  function say(t){ msg.textContent = t; }
+
+  // 前回開いたアプリに目印をつける
+  var links = document.querySelectorAll("a.app");
+  var last = null;
+  try { last = localStorage.getItem(LAST_KEY); } catch(e){}
+  links.forEach(function(a){
+    if (a.dataset.id === last) a.classList.add("is-last");
+    a.addEventListener("click", function(){
+      try { localStorage.setItem(LAST_KEY, a.dataset.id); } catch(e){}
+    });
+  });
+
+  // ---- 学習のきろく ----
+  var NAMES = {ch1:"中1 定期テスト", claude:"中間テスト対策", gemini:"定期テスト対策", quiz:"四択クイズ", eng:"英語準備"};
+  var SUB = {sci:"理科", soc:"社会", jpn:"国語"};
+  function load(k, d){ try { var v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch(e){ return d; } }
+  function pct(sc, n){ return n > 0 ? Math.round(sc / n * 100) : 0; }
+  function entries(){
+    var out = [];
+    var a = load("riku_log", []);
+    if (Array.isArray(a)) a.forEach(function(x){ if (x && x.n > 0) out.push({t:+x.t, app:x.app, label:String(x.label||""), sc:+x.sc, n:+x.n}); });
+    var h = load("qa:hist", []);   // 中間テスト対策(claude.html)が自分で貯めている履歴
+    if (Array.isArray(h)) h.forEach(function(x){ if (x && x.n > 0) out.push({t:+x.t, app:"claude", label:(SUB[x.s]||"")+(x.rev?"(復習)":""), sc:+x.sc, n:+x.n}); });
+    return out.sort(function(a,b){ return a.t - b.t; });
+  }
+  function stat(app, es){
+    var mine = es.filter(function(e){ return e.app === app; }), parts = [];
+    if (mine.length){
+      var s = 0, n = 0; mine.forEach(function(e){ s += e.sc; n += e.n; });
+      parts.push(mine.length + "回・平均 " + pct(s, n) + "%");
+    }
+    if (app === "ch1" && !mine.length){
+      var r = load("studyRecords", {}), tries = 0, wrong = 0;
+      Object.keys(r).forEach(function(k){ tries += r[k].tries || 0; if (r[k].wrong > 0) wrong++; });
+      if (tries) parts.push("回答 " + tries + "回・間違い " + wrong + "問");
+    }
+    if (app === "quiz"){
+      var q = load("quizrec_v1", {}), best = 0;
+      Object.keys(q).forEach(function(k){ var b = q[k] && q[k].best; if (b && b.t) best = Math.max(best, pct(b.s, b.t)); });
+      if (best) parts.push("ベスト " + best + "%");
+    }
+    return parts.length ? parts.join(" / ") : "まだ記録なし";
+  }
+  function p2(x){ return String(x).padStart(2, "0"); }
+  function renderRecords(){
+    var es = entries();
+    document.querySelectorAll("[data-stat]").forEach(function(el){ el.textContent = stat(el.dataset.stat, es); });
+
+    var now = new Date(), day0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime(), DAY = 86400000;
+    var counts = [], i;
+    for (i = 0; i < 14; i++) counts.push(0);
+    var week = 0, S = 0, N = 0;
+    es.forEach(function(e){
+      S += e.sc; N += e.n;
+      var d = Math.floor((day0 - new Date(new Date(e.t).getFullYear(), new Date(e.t).getMonth(), new Date(e.t).getDate()).getTime()) / DAY);
+      if (d >= 0 && d < 14) counts[13 - d]++;
+      if (d >= 0 && d < 7) week++;
+    });
+    var sum = document.getElementById("sum");
+    sum.innerHTML = "";
+    [[week, "今週の回数"], [es.length, "ぜんぶの回数"], [N ? pct(S, N) + "%" : "—", "平均の正答率"]].forEach(function(x){
+      var d = document.createElement("div"), b = document.createElement("b"), s = document.createElement("span");
+      b.textContent = x[0]; s.textContent = x[1]; d.appendChild(b); d.appendChild(s); sum.appendChild(d);
+    });
+    var max = Math.max.apply(null, counts.concat([1])), bars = document.getElementById("bars"), ax = document.getElementById("axis");
+    bars.innerHTML = ""; ax.innerHTML = "";
+    counts.forEach(function(c, k){
+      var dt = new Date(day0 - (13 - k) * DAY), b = document.createElement("i"), l = document.createElement("span");
+      b.style.height = c ? Math.max(8, c / max * 100) + "%" : "3px";
+      if (!c) b.className = "z";
+      b.title = (dt.getMonth() + 1) + "/" + dt.getDate() + " : " + c + "回";
+      bars.appendChild(b);
+      l.textContent = dt.getDate(); ax.appendChild(l);
+    });
+    var ul = document.getElementById("hist");
+    ul.innerHTML = "";
+    var recent = es.slice(-10).reverse();
+    if (!recent.length){
+      var li0 = document.createElement("li"); li0.className = "l"; li0.textContent = "まだ記録がありません。アプリでクイズを最後まで解くと、ここに出ます。"; ul.appendChild(li0);
+    }
+    recent.forEach(function(e){
+      var li = document.createElement("li"), d = document.createElement("span"), l = document.createElement("span"), s = document.createElement("span"), dt = new Date(e.t), pc = pct(e.sc, e.n);
+      d.className = "d"; d.textContent = (dt.getMonth()+1) + "/" + dt.getDate() + " " + p2(dt.getHours()) + ":" + p2(dt.getMinutes());
+      l.className = "l"; l.textContent = (NAMES[e.app] || e.app) + (e.label ? "｜" + e.label : "");
+      s.className = "s" + (pc < 60 ? " lo" : ""); s.textContent = e.sc + "/" + e.n + "(" + pc + "%)";
+      li.appendChild(d); li.appendChild(l); li.appendChild(s); ul.appendChild(li);
+    });
+  }
+  renderRecords();
+  window.addEventListener("pageshow", renderRecords);
+
+  // 保存データの一覧
+  function list(){
+    var tb = document.getElementById("rows");
+    tb.innerHTML = "";
+    var n = 0;
+    try {
+      for (var i = 0; i < localStorage.length; i++){
+        var k = localStorage.key(i);
+        if (k === LAST_KEY) continue;
+        var v = localStorage.getItem(k) || "";
+        var tr = document.createElement("tr");
+        [k, (new Blob([v]).size) + " B", v.slice(0, 60) + (v.length > 60 ? "…" : "")].forEach(function(t){
+          var td = document.createElement("td"); td.textContent = t; tr.appendChild(td);
+        });
+        tb.appendChild(tr); n++;
+      }
+    } catch(e){ say("保存データを読めませんでした。"); return; }
+    if (!n){
+      var tr = document.createElement("tr"), td = document.createElement("td");
+      td.colSpan = 3; td.textContent = "まだ保存データはありません。アプリで問題を解くと、ここに記録が出ます。";
+      tr.appendChild(td); tb.appendChild(tr);
+    }
+  }
+
+  document.getElementById("btnRefresh").addEventListener("click", function(){ list(); renderRecords(); say("更新しました。"); });
+  document.getElementById("data").addEventListener("toggle", function(){ if (this.open) list(); });
+
+  // バックアップ保存
+  document.getElementById("btnExport").addEventListener("click", function(){
+    try {
+      var o = {};
+      for (var i = 0; i < localStorage.length; i++){
+        var k = localStorage.key(i);
+        if (k !== LAST_KEY) o[k] = localStorage.getItem(k);
+      }
+      var d = new Date(), p = function(x){ return String(x).padStart(2, "0"); };
+      var name = "riku_backup_" + d.getFullYear() + p(d.getMonth()+1) + p(d.getDate()) + ".json";
+      var blob = new Blob([JSON.stringify({app:"riku", saved:d.toISOString(), data:o}, null, 2)], {type:"application/json"});
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob); a.download = name;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
+      say("バックアップを保存しました(" + name + ")");
+    } catch(e){ say("バックアップに失敗しました。"); }
+  });
+
+  // バックアップから復元
+  var file = document.getElementById("file");
+  document.getElementById("btnImport").addEventListener("click", function(){ file.click(); });
+  file.addEventListener("change", function(){
+    var f = file.files[0]; if (!f) return;
+    var r = new FileReader();
+    r.onload = function(){
+      try {
+        var j = JSON.parse(r.result);
+        if (!j || j.app !== "riku" || typeof j.data !== "object") throw new Error("形式が違います");
+        var keys = Object.keys(j.data);
+        if (!confirm(keys.length + "件のデータを戻します。同じ名前の記録は上書きされます。よろしいですか?")) { say("キャンセルしました。"); return; }
+        keys.forEach(function(k){ localStorage.setItem(k, j.data[k]); });
+        say(keys.length + "件を戻しました。"); list(); renderRecords();
+      } catch(e){ say("このファイルは読み込めません。バックアップ用のJSONを選んでください。"); }
+      file.value = "";
+    };
+    r.readAsText(f);
+  });
+})();
+</script>
+</body>
+</html>
