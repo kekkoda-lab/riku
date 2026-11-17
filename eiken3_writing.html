@@ -87,6 +87,21 @@ function text(i,mode){
   if(c)p.push('Second, '+fix(c));
   return p.join(' ');
 }
+let _lg='';
+function logCur(){ // 成績を共通の記録(riku_log)へ。同じ答えは二重に記録しない
+  try{
+    const em=S.sec==='em',t=em?emT(S.e):text(S.q,S.mode);
+    if(!t)return;
+    const key=(em?'e'+S.e:'q'+S.q)+'|'+t;if(key===_lg)return;
+    const n=words(t),k=t.split(/[.!?]+/).filter(x=>/[A-Za-z]/.test(x)).length;
+    const ck=em?[n>=15&&n<=25,k>=2,/^[A-Z]/.test(t)&&/[.!?]$/.test(t)]
+      :[n>=25&&n<=35,k>=3,/\bFirst\b/i.test(t)&&/\bSecond\b/i.test(t),!/\.\.\.|…/.test(t),/^[A-Z]/.test(t)&&/[.!?]$/.test(t)];
+    _lg=key;
+    if(window.rikuLog)rikuLog('eng',em?'英検3級ライティング(Eメール)':'英検3級ライティング(意見論述)',ck.filter(Boolean).length,ck.length);
+  }catch(e){}
+}
+window.addEventListener('pagehide',logCur);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)logCur()});
 function render(){
   if(S.sec==='em')return renderEM();
   const q=Q[S.q],d=D[S.q]||{};
@@ -115,15 +130,15 @@ function render(){
   ${S.model?`<div class="model"><b>模範解答の例（${words(q.m)}語）</b><p>${q.m}</p></div>`:''}
   <div class="acts"><button class="btn g" id="prev">← 前の問題</button><button class="btn g" id="next">次の問題 →</button></div>`;
   document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{S.mode=b.dataset.m;S.model=false;render()});
-  document.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>{S.q=+b.dataset.i;S.model=false;render()});
+  document.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>{logCur();S.q=+b.dataset.i;S.model=false;render()});
   document.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{const el=$('#'+(S.mode==='step'?'free':S.f));if(!el)return;el.value=(el.value?el.value.trim()+' ':'')+b.dataset.c;el.dispatchEvent(new Event('input'));el.focus()});
   ['t','r1','r2','free','j1','j2'].forEach(id=>{const el=$('#'+id);if(!el)return;
     el.onfocus=()=>{if(id==='r1'||id==='r2')S.f=id};
     el.oninput=()=>{(D[S.q]=D[S.q]||{})[id]=el.value;save();status();mark()}});
   $('#show').onclick=()=>{S.model=!S.model;render()};
   $('#clr').onclick=()=>{if(confirm('この問題の答えを消しますか？')){delete D[S.q];save();render()}};
-  $('#prev').onclick=()=>{S.q=(S.q+Q.length-1)%Q.length;S.model=false;render()};
-  $('#next').onclick=()=>{S.q=(S.q+1)%Q.length;S.model=false;render()};
+  $('#prev').onclick=()=>{logCur();S.q=(S.q+Q.length-1)%Q.length;S.model=false;render()};
+  $('#next').onclick=()=>{logCur();S.q=(S.q+1)%Q.length;S.model=false;render()};
   $('#copy').onclick=()=>{
     const t=text(S.q,S.mode);
     if(!t){$('#msg').textContent='まだ英文がありません。';return}
@@ -162,7 +177,7 @@ const EM=[
 ];
 const secTabs=()=>`<div class="tabs"><button class="tab${S.sec==='op'?' on':''}" data-s="op">意見論述（25〜35語）</button><button class="tab${S.sec==='em'?' on':''}" data-s="em">Eメール（15〜25語）</button></div>`;
 function bindSec(){
-  document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{S.sec=b.dataset.s;S.model=false;render()});
+  document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{logCur();S.sec=b.dataset.s;S.model=false;render()});
   const x=$('#ex');if(x)x.onclick=()=>{S.ex=!S.ex;render()};
 }
 function STEP(d){return `
@@ -201,12 +216,12 @@ function renderEM(){
   ${S.model?`<div class="model"><b>模範解答の例（${words(e.m)}語）</b><p>${e.m}</p></div>`:''}
   <div class="acts"><button class="btn g" id="prev">前のメール</button><button class="btn g" id="next">次のメール</button></div>`;
   bindSec();
-  document.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{S.e=+b.dataset.e;S.model=false;render()});
+  document.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{logCur();S.e=+b.dataset.e;S.model=false;render()});
   $('#em').oninput=()=>{D['e'+S.e]={free:$('#em').value};save();stat2(emT(S.e));document.querySelectorAll('.pill')[S.e].classList.toggle('done',!!emT(S.e))};
   $('#show').onclick=()=>{S.model=!S.model;render()};
   $('#clr').onclick=()=>{if(confirm('このメールの答えを消しますか？')){delete D['e'+S.e];save();render()}};
-  $('#prev').onclick=()=>{S.e=(S.e+EM.length-1)%EM.length;S.model=false;render()};
-  $('#next').onclick=()=>{S.e=(S.e+1)%EM.length;S.model=false;render()};
+  $('#prev').onclick=()=>{logCur();S.e=(S.e+EM.length-1)%EM.length;S.model=false;render()};
+  $('#next').onclick=()=>{logCur();S.e=(S.e+1)%EM.length;S.model=false;render()};
   stat2(t);
 }
 render();
