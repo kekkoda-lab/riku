@@ -156,4 +156,4 @@ $.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(t&&!t.dis
 $.addEventListener('change',e=>{if(e.target.id=='fl'&&e.target.files[0]){const r=new FileReader();r.onload=()=>{document.getElementById('tx').value=r.result};r.readAsText(e.target.files[0])}});
 $.addEventListener('keydown',e=>{if(e.key=='Enter'&&e.target.id=='in'&&e.target.tagName=='INPUT')check()});
 hub();
-</script></body></html>
+</script><script src="riku-common.js"></script></body></html>

@@ -406,6 +406,7 @@ function renderQuizQuestion() {
   const area = document.getElementById('mainArea');
   if (quizIdx >= quizList.length) {
     const rate = Math.round((score / quizList.length) * 100);
+    try { window.rikuLog && rikuLog('gemini', (currentSubject==='all'?'全科目':currentSubject) + (currentUnit==='all'?'':'｜'+currentUnit) + (reviewOnly?'｜復習':''), score, quizList.length); } catch(e) {}
     area.innerHTML = `
       <div class="result-box">
         <h2>演習完了！お疲れ様でした！</h2>
@@ -504,5 +505,6 @@ function toggleAllBlanks(reveal) {
 
 initContent();
 </script>
+<script src="riku-common.js"></script>
 </body>
 </html>
