@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>英検3級 ライティング練習</title>
+<link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@600&family=Zen+Maru+Gothic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#FAF7EF;--ink:#24344D;--soft:#566178;--rule:#C3D7E8;--red:#C8433C;--gold:#C9A227;--ok:#4C7A5D;--line:#E7E0CE;--gray:#9AA2AF}
+@media (prefers-color-scheme:dark){:root{--paper:#1B2230;--ink:#EDE9DD;--soft:#A9B2C3;--rule:#33405A;--line:#3A4660}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.7 'Zen Maru Gothic',sans-serif}
+.app{max-width:780px;margin:0 auto;padding:24px 16px 50px}
+.page{background:repeating-linear-gradient(to bottom,transparent 0 39px,var(--rule) 39px 40px) 0 100px;border:1px solid var(--line);border-radius:14px;padding:30px 28px 30px 46px;position:relative}
+.page:before{content:"";position:absolute;left:26px;top:0;bottom:0;width:2px;background:var(--red);opacity:.5}
+h1{font:600 28px 'Klee One',cursive;margin:0 0 4px}
+.sub{color:var(--soft);font-size:14px;margin:0 0 12px}
+button{font:inherit;cursor:pointer}
+.tabs,.pills,.chips,.acts{display:flex;gap:8px;flex-wrap:wrap}
+.tabs,.pills{margin:10px 0}
+.tab{padding:9px 16px;border:2px solid var(--line);background:#fff;border-radius:10px;font-weight:700;color:#566178}
+.tab.on{border-color:#24344D;color:#fff;background:#24344D}
+.pill{width:40px;height:40px;border-radius:50%;border:2px solid var(--line);background:#fff;font-weight:700;position:relative;color:#566178}
+.pill.on{background:var(--red);border-color:var(--red);color:#fff}
+.pill.done:after{content:"";position:absolute;top:-3px;right:-3px;width:11px;height:11px;border-radius:50%;background:var(--ok)}
+.card{background:#fff;color:#24344D;border:2px solid var(--line);border-radius:12px;padding:16px 18px;margin:12px 0}
+.en{font-size:22px;font-weight:700;margin:0}
+.jp{color:#566178;font-size:14px;margin:2px 0 0}
+.chips{margin:8px 0}
+.chip{border:1.5px solid var(--gold);background:#FFFBEA;color:#24344D;border-radius:999px;padding:5px 12px;font-size:14px}
+label{display:block;font-weight:700;font-size:14px;color:var(--soft);margin:10px 0 4px}
+.row{display:flex;align-items:center;gap:8px}
+.pre{font-weight:700;white-space:nowrap}
+input,textarea{width:100%;font:inherit;padding:10px 12px;border:2px solid var(--line);border-radius:10px;background:#fff;color:#24344D}
+textarea{min-height:150px;resize:vertical}
+input:focus,textarea:focus{outline:none;border-color:var(--gold)}
+.bar{height:10px;background:var(--line);border-radius:99px;overflow:hidden;margin:6px 0}
+.fill{height:100%;width:0;background:var(--gold)}
+.cnt{font-weight:700;margin:12px 0 0}
+.good{color:var(--ok)}.bad{color:var(--red)}
+ul.chk{list-style:none;padding:0;margin:8px 0;font-size:15px}
+.chk li:before{content:"○ ";color:var(--gray)}
+.chk li.y{color:var(--ok)}
+.chk li.y:before{content:"✓ ";font-weight:700}
+.btn{padding:11px 18px;border-radius:10px;border:none;background:#24344D;color:#fff;font-weight:700}
+.btn.r{background:var(--red)}
+.btn.g{background:transparent;color:var(--soft);border:2px solid var(--line)}
+.acts{margin:14px 0}
+.model{background:#F1F7F3;color:#24344D;border:2px solid var(--ok);border-radius:12px;padding:14px 18px}
+.model p{margin:4px 0}
+.note{font-size:13px;color:var(--soft);margin:4px 0}
+.back{display:inline-block;margin:0 0 10px;padding:8px 14px;border:2px solid var(--line);border-radius:10px;color:var(--soft);font-weight:700;font-size:14px;text-decoration:none}
+.back:hover{border-color:var(--ink);color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="app"><div class="page" id="page"></div></div>
+<script>
+const Q=[
+{en:"Do you like to cook?",jp:"あなたは料理をするのが好きですか？",hint:"楽しい？ 家族が喜ぶ？",m:"Yes, I do. I like cooking very much. First, it is fun for me to make new dishes. Second, my family is happy when they eat my food."},
+{en:"Which do you like better, summer or winter?",jp:"夏と冬、どちらが好きですか？",hint:"海で泳げる？ 雪で遊べる？",m:"I like summer better. First, I can swim in the sea. It is very fun. Second, I can eat ice cream every day. I like cold sweets very much."},
+{en:"Do you want to live in a big city in the future?",jp:"あなたは将来、大都市に住みたいですか？",hint:"便利？ 静かなほうがいい？",m:"No, I don't. I want to live in a small town. First, it is quiet there. Second, I can enjoy nature and spend time with my family."},
+{en:"Do you think it is good to read books every day?",jp:"毎日本を読むのはよいことだと思いますか？",hint:"学べる？ 落ち着く？",m:"I think it is good to read books every day. First, I can learn many things from books. Second, reading is a good way to relax after school."},
+{en:"Do you want to have a pet?",jp:"あなたはペットを飼いたいですか？",hint:"かわいい？ 散歩で運動できる？",m:"Yes, I do. I want to have a dog. First, dogs are very cute. Second, I can go for a walk with my dog every day and get some exercise."},
+{en:"Which do you like better, studying at home or at the library?",jp:"家と図書館、どちらで勉強するほうが好きですか？",hint:"静か？ 本がたくさんある？",m:"I like studying at the library better. First, it is quiet there, so I can focus. Second, I can find many books and learn about many things."},
+{en:"Do you think students should help with housework?",jp:"生徒は家の手伝いをするべきだと思いますか？",hint:"家族を助けられる？ 料理を学べる？",m:"Yes, I do. I think students should help with housework. First, it is a good way to help our family. Second, we can learn how to cook and clean."},
+{en:"Do you like to take pictures?",jp:"あなたは写真を撮るのが好きですか？",hint:"楽しい？ 思い出になる？",m:"Yes, I do. I like taking pictures of flowers. First, it is fun for me to find beautiful things. Second, I can look at my pictures and remember good days."},
+{en:"Do you want to visit a foreign country in the future?",jp:"あなたは将来、外国を訪れたいですか？",hint:"文化を学べる？ 英語を話せる？",m:"Yes, I do. I want to visit Canada. First, I can learn about a different culture. Second, I can speak English with many people and make new friends."},
+{en:"What is your favorite season?",jp:"あなたの好きな季節は何ですか？",hint:"天気がいい？ 食べ物がおいしい？",m:"My favorite season is autumn. First, the weather is nice, so I can go out. Second, I like eating sweet potatoes and apples in autumn very much."}
+];
+const CH=["it is fun for me","I like ... very much","I can learn many things","I can learn about ...","it is useful for me","it is easy for me to ...","I can spend time with my friends","I can spend time with my family"];
+const KEY='eiken3_writing_v1';
+let S={sec:'op',mode:'template',q:0,e:0,ex:false,model:false,f:'r1'};
+let D=load();
+function load(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return{}}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(D))}catch(e){}}
+const $=s=>document.querySelector(s);
+const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+const fix=s=>/[.!?]$/.test(s)?s:s+'.';
+const words=s=>(s.match(/[A-Za-z0-9][A-Za-z0-9'’-]*/g)||[]).length;
+function text(i,mode){
+  const d=D[i]||{};
+  if(mode==='free'||mode==='step')return (d.free||'').trim();
+  const p=[],a=(d.t||'').trim(),b=(d.r1||'').trim(),c=(d.r2||'').trim();
+  if(a)p.push(fix(a));
+  if(b)p.push('First, '+fix(b));
+  if(c)p.push('Second, '+fix(c));
+  return p.join(' ');
+}
+function render(){
+  if(S.sec==='em')return renderEM();
+  const q=Q[S.q],d=D[S.q]||{};
+  const pills=Q.map((_,i)=>`<button class="pill${i===S.q?' on':''}${text(i,'template')||text(i,'free')?' done':''}" data-i="${i}">${i+1}</button>`).join('');
+  const chips=CH.map(c=>`<button class="chip" data-c="${c}">${c}</button>`).join('');
+  const inputs=S.mode==='step'?STEP(d):S.mode==='template'?`
+    <label>① 意見（I think ~ / I like ~ / Yes, I do. など）</label>
+    <input id="t" value="${esc(d.t)}" placeholder="I think ...">
+    <label>② 理由1</label><div class="row"><span class="pre">First,</span><input id="r1" value="${esc(d.r1)}" placeholder="it is fun for me."></div>
+    <label>③ 理由2</label><div class="row"><span class="pre">Second,</span><input id="r2" value="${esc(d.r2)}" placeholder="I can ..."></div>
+    <p class="note">黄色いカードをタップすると、選んでいる理由の欄に入ります（「...」は自分の言葉に直そう）。</p>
+    <div class="chips">${chips}</div>`
+  :`<label>あなたの答え（意見 + 理由2つ）</label>
+    <textarea id="free" placeholder="I think ... First, ... Second, ...">${esc(d.free)}</textarea>
+    <p class="note">型: I think ~. / First, ~. / Second, ~.</p>`;
+  $('#page').innerHTML=`<a class="back" href="/riku/Eng_03.html">カテゴリー選択に戻る</a>
+  <h1>英検3級 ライティング練習</h1>
+  <p class="sub">意見＋理由2つを、25〜35語で書こう</p>
+  ${secTabs()}<div class="tabs"><button class="tab${S.mode==='template'?' on':''}" data-m="template">型つき（穴うめ）</button><button class="tab${S.mode==='free'?' on':''}" data-m="free">自由に書く</button><button class="tab${S.mode==='step'?' on':''}" data-m="step">考え方ステップ</button></div>
+  <div class="pills">${pills}</div>
+  <div class="card"><p class="note">QUESTION ${S.q+1} / ${Q.length}</p><p class="en">${q.en}</p><p class="jp">${q.jp}（理由のヒント: ${q.hint}）</p></div>
+  ${inputs}
+  <div id="st"></div>
+  <div class="acts"><button class="btn r" id="show">${S.model?'模範解答をかくす':'模範解答を見る'}</button><button class="btn" id="copy">添削用にコピー</button><button class="btn g" id="clr">消す</button></div>
+  <p class="note" id="msg"></p>
+  ${S.model?`<div class="model"><b>模範解答の例（${words(q.m)}語）</b><p>${q.m}</p></div>`:''}
+  <div class="acts"><button class="btn g" id="prev">← 前の問題</button><button class="btn g" id="next">次の問題 →</button></div>`;
+  document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{S.mode=b.dataset.m;S.model=false;render()});
+  document.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>{S.q=+b.dataset.i;S.model=false;render()});
+  document.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{const el=$('#'+(S.mode==='step'?'free':S.f));if(!el)return;el.value=(el.value?el.value.trim()+' ':'')+b.dataset.c;el.dispatchEvent(new Event('input'));el.focus()});
+  ['t','r1','r2','free','j1','j2'].forEach(id=>{const el=$('#'+id);if(!el)return;
+    el.onfocus=()=>{if(id==='r1'||id==='r2')S.f=id};
+    el.oninput=()=>{(D[S.q]=D[S.q]||{})[id]=el.value;save();status();mark()}});
+  $('#show').onclick=()=>{S.model=!S.model;render()};
+  $('#clr').onclick=()=>{if(confirm('この問題の答えを消しますか？')){delete D[S.q];save();render()}};
+  $('#prev').onclick=()=>{S.q=(S.q+Q.length-1)%Q.length;S.model=false;render()};
+  $('#next').onclick=()=>{S.q=(S.q+1)%Q.length;S.model=false;render()};
+  $('#copy').onclick=()=>{
+    const t=text(S.q,S.mode);
+    if(!t){$('#msg').textContent='まだ英文がありません。';return}
+    const m='英検3級ライティングの添削をお願いします。\nQUESTION: '+Q[S.q].en+'\nMy answer: '+t;
+    const ng=()=>{$('#msg').textContent='コピーできませんでした。英文を選んでコピーしてください。'};
+    if(navigator.clipboard)navigator.clipboard.writeText(m).then(()=>{$('#msg').textContent='コピーしました。Claudeのチャットに貼り付けてください。'},ng);else ng();
+  };
+  bindSec();status();
+}
+function mark(){document.querySelectorAll('.pill')[S.q].classList.toggle('done',!!(text(S.q,'template')||text(S.q,'free')))}
+function status(){
+  const t=text(S.q,S.mode),n=words(t),has=!!t;
+  const s=t.split(/[.!?]+/).filter(x=>/[A-Za-z]/.test(x)).length;
+  const ck=[
+    [n>=25&&n<=35,'語数が25〜35語'],
+    [s>=3,'3文以上で書いている'],
+    [/\bFirst\b/i.test(t)&&/\bSecond\b/i.test(t),'First と Second で理由を2つ書いた'],
+    [has&&!/\.\.\.|…/.test(t),'「...」が残っていない'],
+    [/^[A-Z]/.test(t)&&/[.!?]$/.test(t),'大文字で始まり、ピリオドで終わっている']
+  ];
+  const msg=!has?'目標 25〜35語':n<25?'あと '+(25-n)+' 語':n>35?(n-35)+' 語オーバー':'ちょうどいい！';
+  const cls=n>35?'bad':n>=25?'good':'';
+  const col=n>35?'#C8433C':n>=25?'#4C7A5D':'#C9A227';
+  $('#st').innerHTML=`<p class="cnt">${n} 語 <span class="${cls}">（${msg}）</span></p>
+  <div class="bar"><div class="fill" style="width:${Math.min(n/35,1)*100}%;background:${col}"></div></div>
+  <ul class="chk">${ck.map(c=>`<li class="${c[0]?'y':''}">${c[1]}</li>`).join('')}</ul>`;
+}
+const EJ=["料理は楽しい。家族がよろこぶ。","夏は海で泳げる。アイスを食べられる。","小さい町は静か。自然が好き。家族といられる。","本でいろいろ学べる。本を読むと落ち着く。","犬はかわいい。毎日いっしょに散歩できる。","図書館は静か。本がたくさんある。","家族を助けられる。料理をおぼえられる。","きれいなものを見つけるのが楽しい。思い出になる。","ちがう文化を学べる。英語を話せる。","秋は天気がいい。おいしいものが食べられる。"];
+const EM=[
+{mail:"Hi!\nI'm going to visit your town next month. I want to see a festival. Do you know any festivals in your town? Also, what food should I try?\nYour friend,\nJim",jp:"質問: 町のお祭り／おすすめの食べ物",m:"Hi Jim, there is a big festival in August. You should try takoyaki, because it is delicious. See you soon!"},
+{mail:"Hello!\nThank you for the picture of your dog. He is so cute! What is his name? And how old is he?\nYour friend,\nEmma",jp:"質問: 犬の名前／年れい",m:"Hi Emma, his name is Kuro. He is three years old. He likes to run in the park. Bye!"},
+{mail:"Hi!\nI want to join a club at school. What club are you in? Do you enjoy it?\nYour friend,\nTom",jp:"質問: 入っているクラブ／楽しいか",m:"Hi Tom, I am in the tennis club. I enjoy it very much because I can play with my friends. Good luck!"},
+{mail:"Hello!\nMy birthday is next week, so I will have a party at my house. Can you come? Also, what kind of cake do you like?\nYour friend,\nLisa",jp:"質問: パーティーに来られるか／好きなケーキ",m:"Hi Lisa, yes, I can come to your party. I like chocolate cake very much. See you next week!"},
+{mail:"Hi!\nI started to learn Japanese last month. It is difficult for me. What is the best way to study a language? Do you study English every day?\nYour friend,\nBen",jp:"質問: 語学のよい勉強法／毎日英語を勉強するか",m:"Hi Ben, I think watching movies is a good way. I study English for thirty minutes every day. Keep trying!"},
+{mail:"Hello!\nI'm going to go to your city this summer. Where do you want to go with me? What do you want to do there?\nYour friend,\nAnna",jp:"質問: 行きたい場所／そこでしたいこと",m:"Hi Anna, I want to go to the beach with you. We can swim and eat ice cream there. I am excited!"}
+];
+const secTabs=()=>`<div class="tabs"><button class="tab${S.sec==='op'?' on':''}" data-s="op">意見論述（25〜35語）</button><button class="tab${S.sec==='em'?' on':''}" data-s="em">Eメール（15〜25語）</button></div>`;
+function bindSec(){
+  document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{S.sec=b.dataset.s;S.model=false;render()});
+  const x=$('#ex');if(x)x.onclick=()=>{S.ex=!S.ex;render()};
+}
+function STEP(d){return `
+  <label>① まず日本語で、理由を考えよう</label>
+  <textarea id="j1" style="min-height:60px">${esc(d.j1)}</textarea>
+  <label>② 小学1年生にも分かる、みじかい日本語に直そう</label>
+  <textarea id="j2" style="min-height:60px" placeholder="例: 海で泳げる。楽しい。">${esc(d.j2)}</textarea>
+  <button class="btn g" id="ex">${S.ex?'例をかくす':'例を見る'}</button>${S.ex?`<p class="note">この問題の例: ${EJ[S.q]}</p>`:''}
+  <label>③ 知っている英語だけで、英語にしよう（I think ~. First, ~. Second, ~.）</label>
+  <textarea id="free">${esc(d.free)}</textarea>
+  <div class="chips">${CH.map(c=>`<button class="chip" data-c="${c}">${c}</button>`).join('')}</div>`}
+const emT=i=>((D['e'+i]||{}).free||'').trim();
+function stat2(t){
+  const n=words(t),has=!!t,s=t.split(/[.!?]+/).filter(x=>/[A-Za-z]/.test(x)).length;
+  const ck=[[n>=15&&n<=25,'語数が15〜25語'],[s>=2,'2文以上で書いている'],[/^[A-Z]/.test(t)&&/[.!?]$/.test(t),'大文字で始まり、ピリオドで終わっている']];
+  const msg=!has?'目標 15〜25語':n<15?'あと '+(15-n)+' 語':n>25?(n-25)+' 語オーバー':'ちょうどいい！';
+  const col=n>25?'#C8433C':n>=15?'#4C7A5D':'#C9A227';
+  $('#st').innerHTML=`<p class="cnt">${n} 語 <span class="${n>25?'bad':n>=15?'good':''}">（${msg}）</span></p>
+  <div class="bar"><div class="fill" style="width:${Math.min(n/25,1)*100}%;background:${col}"></div></div>
+  <ul class="chk">${ck.map(c=>`<li class="${c[0]?'y':''}">${c[1]}</li>`).join('')}</ul>
+  <p class="note">見直し: メールの2つの質問に、両方答えたかな？</p>`;
+}
+function renderEM(){
+  const e=EM[S.e],t=emT(S.e);
+  const pills=EM.map((_,i)=>`<button class="pill${i===S.e?' on':''}${emT(i)?' done':''}" data-e="${i}">${i+1}</button>`).join('');
+  $('#page').innerHTML=`<a class="back" href="/riku/Eng_03.html">カテゴリー選択に戻る</a>
+  <h1>英検3級 ライティング練習</h1>
+  <p class="sub">Eメールに返信しよう（2つの質問に答える）</p>
+  ${secTabs()}
+  <div class="pills">${pills}</div>
+  <div class="card"><p class="note">EMAIL ${S.e+1} / ${EM.length}</p><p style="margin:4px 0">${e.mail.replace(/\n/g,'<br>')}</p><p class="jp">${e.jp}</p></div>
+  <label>あなたの返信</label>
+  <textarea id="em" placeholder="Hi ..., ...">${esc(t)}</textarea>
+  <div id="st"></div>
+  <div class="acts"><button class="btn r" id="show">${S.model?'模範解答をかくす':'模範解答を見る'}</button><button class="btn g" id="clr">消す</button></div>
+  ${S.model?`<div class="model"><b>模範解答の例（${words(e.m)}語）</b><p>${e.m}</p></div>`:''}
+  <div class="acts"><button class="btn g" id="prev">前のメール</button><button class="btn g" id="next">次のメール</button></div>`;
+  bindSec();
+  document.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{S.e=+b.dataset.e;S.model=false;render()});
+  $('#em').oninput=()=>{D['e'+S.e]={free:$('#em').value};save();stat2(emT(S.e));document.querySelectorAll('.pill')[S.e].classList.toggle('done',!!emT(S.e))};
+  $('#show').onclick=()=>{S.model=!S.model;render()};
+  $('#clr').onclick=()=>{if(confirm('このメールの答えを消しますか？')){delete D['e'+S.e];save();render()}};
+  $('#prev').onclick=()=>{S.e=(S.e+EM.length-1)%EM.length;S.model=false;render()};
+  $('#next').onclick=()=>{S.e=(S.e+1)%EM.length;S.model=false;render()};
+  stat2(t);
+}
+render();
+</script>
+<a href="/riku/" id="homeBtn" style="position:fixed;left:12px;bottom:12px;z-index:999;padding:10px 16px;background:#24344D;color:#fff;border-radius:999px;text-decoration:none;font-size:14px;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,.3)">🏠 トップへ</a>
+</body>
+</html>
